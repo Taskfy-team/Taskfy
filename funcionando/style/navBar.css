@@ -5,6 +5,10 @@
 }
 
 .sidebar {
+    z-index: 1000;
+}
+
+.sidebar {
   position: fixed;
   left: 0;
   top: 0;
