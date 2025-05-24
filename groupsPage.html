@@ -1,14 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Grupos</title>
-  <link rel="stylesheet" href="views-objects/style/cardPadrão.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="views-objects/style/navBar.css">
+    <link rel="stylesheet" href="views-objects/style/cardPadrão.css">
 </head>
+
 <body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="#homePage"><img src="../../public/images/minilogo.png" alt="Logo" class="sidebar-logo"></a>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="menu-item active">
+        <a href="#Grupos"><ion-icon name="people-outline"></ion-icon> Grupos</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Tarefas"><ion-icon name="document-text-outline"></ion-icon> Tarefas</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Calendario"><ion-icon name="calendar-outline"></ion-icon> Calendário</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <img src="icons/user.svg" alt="Usuário" class="user-icon">
+      <p>Configurações</p>
+    </div>
+  </div>
 
-  <div id="grupo-container"></div>
+  <a href="/grupo/{{id}}" class="group-card-link">
+    <div class="group-card">
+      <div class="group-title">Grupo</div>
+      <div class="group-description">Descricao</div>
+      <div class="group-tasks">Tarefas: 5 em atraso</div>
+    </div>
+  </a>
 
-  <script src="main.js"></script>
 </body>
+
 </html>
