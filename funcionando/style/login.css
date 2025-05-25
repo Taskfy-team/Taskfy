@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: "Poppins", sans-serif;
+
+}
+
+body{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    padding: 0%;
+    margin: 0%;
+    font-weight: bold;
+    background-color: #B5D6FF;
+}
+
+form{
+    width: 30vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    gap: 5vh;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+    -webkit-box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+    -moz-box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+}
+
+form input{
+    width: 80%;
+    height: 8vh;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: 2px solid lightgray;
+    font-size: 14px;
+}
+
+button{
+    width: 80%;
+    height: 8vh;
+    background-color: #3C91FF;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+    -webkit-box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+    -moz-box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.31);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 340;
+
+}
+
+a{
+    color: black;
+    font-weight: 350;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    margin: 0;
+}
