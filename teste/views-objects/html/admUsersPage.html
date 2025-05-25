@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../style/navBar.css">
+  <link rel="stylesheet" href="../style/admUsersPage.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="#homePage"><img src="../../../public/images/minilogo.png" alt="Logo" class="sidebar-logo"></a>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="menu-item active">
+        <a href="groupsPage.html"><ion-icon name="people-outline"></ion-icon> Grupos</a>
+      </li>
+      <li class="menu-item">
+        <a href="tarefasPage.html"><ion-icon name="document-text-outline"></ion-icon> Tarefas</a>
+      </li>
+      <li class="menu-item">
+        <a href="#users"><ion-icon name="calendar-outline"></ion-icon> Usuários</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <img src="icons/user.svg" alt="Usuário" class="user-icon">
+      <p>Configurações</p>
+    </div>
+  </div>
+  <main>
+    <h1>Administrar Usuários</h1>
+<form class="filtros" method="POST" action="/buscar-usuarios">
+  <label for="grupo">Grupo:</label>
+  <select id="grupo" name="grupo">
+    <option value="">Selecionar</option>
+    <option value="grupo1">Grupo 1</option>
+    <option value="grupo2">Grupo 2</option>
+  </select>
+
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
+
+  <label for="data">Data:</label>
+  
+  <input type="date" id="data" name="data">
+  <button type="submit" class="buscar">Buscar</button>
+  <button type="button" class="exportar">Exportar<ion-icon name="download-outline" size="medium"></ion-icon></button>
+  <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
+  <button type="button" class="criar">Criar +</button>
+</form>
+
+    <section class="tabela-usuarios">
+      <table>
+        <thead>
+          <tr>
+            <th>Selecionar</th>
+            <th>Data de Criação</th>
+            <th>Nome do usuário</th>
+            <th>Data Nascimento</th>
+            <th>Telefone</th>
+            <th>Status</th>
+            <th>Admin</th>
+            <th>Email</th>
+            <th>Editar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>06/06/23</td>
+            <td>Otávio</td>
+            <td>08/06/2005</td>
+            <td>9 8844-6568</td>
+            <td>Ativo</td>
+            <td>Sim</td>
+            <td>otavio@email.com</td>
+            <td><button><ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</body>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</html>
