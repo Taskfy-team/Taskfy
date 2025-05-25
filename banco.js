@@ -65,4 +65,18 @@ async function buscarUsuario(usuario)
     }
 }
 
-module.exports = { buscarUsuario }
+//Função para retornar grupos do usuário
+async function buscarGruposDoUsuario(idUsuario) {
+    const conexao = await conectarBD();
+    const sql = `
+        SELECT nome_equipe, desc_equipe, status_equipe 
+        FROM equipes 
+        INNER JOIN usuario_equipe ON equipes.id_equipe = usuario_equipe.fk_equipe 
+        INNER JOIN usuario ON usuario_equipe.fk_usuario = usuario.id_usuario 
+        WHERE usuario.id_usuario = ?;
+    `;
+    const [grupos] = await conexao.query(sql, [idUsuario]);
+    return grupos;
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario};

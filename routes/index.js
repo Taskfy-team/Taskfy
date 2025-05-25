@@ -29,7 +29,8 @@ router.post('/login', async function(req, res, next){
     global.usucodigo = usuario.id_usuario;
     global.usuemail = usuario.email_usuario;
 
-    res.redirect('/mainpage');
+    res.redirect('/grupos');
+
   }
   else
   {
@@ -39,6 +40,13 @@ router.post('/login', async function(req, res, next){
 });
 
 
+router.get('/grupos', async function(req, res) {
+  verificarLogin(res);
+
+  const grupos = await global.banco.buscarGruposDoUsuario(global.usucodigo);
+
+  res.render('groupsPage', { titulo: 'Taskfy - Grupos', grupos });
+});
 
 //
 // Funções de segurança

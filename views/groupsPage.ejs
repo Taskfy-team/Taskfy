@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheets/navBar.css">
+  <link rel="stylesheet" href="/stylesheets/cardPadrão.css">
+  <link rel="stylesheet" href="/stylesheets/groupsPage.css">
+
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="#homePage"><img src="../../public/images/minilogo.png" alt="Logo" class="sidebar-logo"></a>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="menu-item active">
+        <a href="groupsPage.html"><ion-icon name="people-outline"></ion-icon> Grupos</a>
+      </li>
+      <li class="menu-item">
+        <a href="tarefasPage.html"><ion-icon name="document-text-outline"></ion-icon> Tarefas</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Calendario"><ion-icon name="calendar-outline"></ion-icon> Calendário</a>
+      </li>
+      <li class="menu-item">
+        <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <img src="icons/user.svg" alt="Usuário" class="user-icon">
+      <p>Configurações</p>
+    </div>
+  </div>
+
+<div class="group-container">
+  <% if (grupos.length > 0) { %>
+    <% grupos.forEach(grupo => { %>
+      <a href="#grupo" class="group-card-link">
+        <div class="group-card">
+          <div class="group-title"><%= grupo.nome_equipe %></div>
+          <div class="group-description"><%= grupo.desc_equipe %></div>
+          <div class="group-tasks">Status: <%= grupo.status_equipe %></div>
+        </div>
+      </a>
+    <% }) %>
+  <% } else { %>
+    <p>Nenhum grupo encontrado.</p>
+  <% } %>
+</div>
+
+
+
+</body>
+
+</html>
