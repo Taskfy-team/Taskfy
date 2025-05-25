@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskfy Tarefa 0000</title>
+  <script src="../js/jquery.js"></script>
+  <script src="../js/menu.js"></script>
+  <link rel="stylesheet" href="../style/task.css">
+</head>
+
+<body>
+<div class="group-container">
+    <div class="main-task">
+        <div class="task-header">
+            <div>
+                TITULO TAREFA
+            </div>
+            <div>
+                <p>Status: Completo</p>
+                <p>Criado: 31-12-9999</p>
+                <p>Colaboradores: </p>
+            </div>
+        </div>
+        <div class="task-messages">
+            <div class="task-message">
+                <div>
+                    <b>FULANO</b> postou 14-02-2025
+                </div>
+                <div>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores at quas aliquid beatae repudiandae ex totam adipisci praesentium officiis dolore voluptatem, accusamus dolorem ducimus aliquam distinctio saepe, atque maxime? Hic?
+                </div>
+            </div>
+            <div class="task-message">
+                <div>
+                    <b>FULANO</b> postou 14-02-2025
+                </div>
+                <div>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequatur, at. Nisi culpa, architecto voluptates quia, cupiditate magni distinctio dolorum ullam illum, sequi rem fugit accusantium quisquam adipisci consectetur ratione optio.
+                </div>
+            </div>
+        </div>
+        <form action="" method="" class="send-message">
+            <div>
+                <input type="text">
+            </div>
+            <div>
+                <input type="file">
+                <select name="task-init-stat">
+                    <option value="Aberta">Aberta</option>
+                    <option value="Em andamento">Em andamento</option>
+                    <option value="Fechada">Fechada</option>
+                </select>
+                <input type="button" value="Recomeçar Formulario">
+                <input type="submit">
+            </div>
+        </form>
+    </div>
+    <div class="side-chat">
+        <div class="chat-title">
+            Chat
+        </div>
+        <div class="chat-messages">
+            <div>
+                <b>Fulano:</b>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus odit illum numquam suscipit deserunt? Pariatur quam provident aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
+            </div>
+        </div>
+        <div class="chat-send-messages">
+            <input type="text">
+            <button type="submit">-></button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    initMenu("tarefa");
+</script>
+</html>
