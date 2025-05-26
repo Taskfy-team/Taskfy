@@ -2,45 +2,48 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index', { titulo: 'Taskfy - Login' });
 });
 
-router.get('/mainpage', function(req, res, next) {
+router.get('/mainpage', function (req, res, next) {
   verificarLogin(res);
-  res.render('main', { titulo: 'Taskfy - Main' , nomeapp: 'Taskfy'});
+  res.render('main', { titulo: 'Taskfy - Main', nomeapp: 'Taskfy' });
 });
 
 /* POST para login */
-router.post('/login', async function(req, res, next){
+router.post('/login', async function (req, res, next) {
   const email = req.body.email;
   const senha = req.body.senha;
 
   console.log("Dados recebidos em POST /login");
-  console.log("email e senha do formulario :", email, senha );
+  console.log("email e senha do formulario :", email, senha);
 
-  const usuario = await global.banco.buscarUsuario({email,senha});
+  const usuario = await global.banco.buscarUsuario({ email, senha });
 
   console.log("Dados retornados de buscarUsuario para POST /login");
   console.log(usuario);
 
-  if (usuario.id_usuario)
-  {
+  if (usuario.id_usuario) {
     global.usucodigo = usuario.id_usuario;
     global.usuemail = usuario.email_usuario;
 
     res.redirect('/grupos');
 
   }
-  else
-  {
+  else {
     res.redirect('/');
   }
-  
+
 });
 
+router.get('/logout', function(req, res) {
+  global.usucodigo = null;
+  global.usuemail = null;
+  res.redirect('/');
+});
 
-router.get('/grupos', async function(req, res) {
+router.get('/grupos', async function (req, res) {
   verificarLogin(res);
 
   const grupos = await global.banco.buscarGruposDoUsuario(global.usucodigo);
@@ -48,13 +51,8 @@ router.get('/grupos', async function(req, res) {
   res.render('groupsPage', { titulo: 'Taskfy - Grupos', grupos });
 });
 
-//
-// Funções de segurança
-//
-
 // Verifica se tem usuario logado
-function verificarLogin(res)
-{
+function verificarLogin(res) {
   if (!global.usuemail || global.usuemail == "")
     res.redirect('/');
 }
