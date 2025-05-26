@@ -37,6 +37,8 @@ router.post('/login', async function (req, res, next) {
 
 });
 
+
+
 router.get('/logout', function(req, res) {
   global.usucodigo = null;
   global.usuemail = null;
@@ -50,6 +52,20 @@ router.get('/grupos', async function (req, res) {
 
   res.render('groupsPage', { titulo: 'Taskfy - Grupos', grupos });
 });
+
+router.get('/grupo/:id', async function(req, res) {
+  verificarLogin(res);
+  const idGrupo = req.params.id;
+  const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
+
+  res.render('tarefasGrupo', {
+    titulo: 'Tarefas do Grupo',
+    tarefas,
+    nomeGrupo: `Grupo ${idGrupo}`
+  });
+});
+
+
 
 // Verifica se tem usuario logado
 function verificarLogin(res) {

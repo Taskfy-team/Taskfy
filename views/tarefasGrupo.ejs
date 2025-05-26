@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="/stylesheets/navBar.css">
-  <link rel="stylesheet" href="/stylesheets/cardPadrão.css">
+  <link rel="stylesheet" href="/stylesheets/cardFavoritas.css">
   <link rel="stylesheet" href="/stylesheets/groupsPage.css">
-
 </head>
 
 <body>
@@ -29,30 +28,32 @@
       <li class="menu-item">
         <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
       </li>
-      <li class="menu-item" style="background-color: #EE204D;">
-        <a href="/logout"><ion-icon name="log-in-outline"></ion-icon> Sair</a>
-      </li>
     </ul>
     <div class="sidebar-footer">
-      <img src="/icons/user.svg" alt="Usuário" class="user-icon">
+      <img src="icons/user.svg" alt="Usuário" class="user-icon">
       <p>Configurações</p>
-      <a href="/logout" class="logout-button">Sair</a>
     </div>
   </div>
-
   <div class="group-container">
-<% grupos.forEach(grupo => { %>
-  <a href="/grupo/<%= grupo.id_equipe %>" class="group-card-link">
-    <div class="group-card">
-      <div class="group-title"><%= grupo.nome_equipe %></div>
-      <div class="group-description"><%= grupo.desc_equipe %></div>
-      <div class="group-tasks">Status: <%= grupo.status_equipe %></div>
-    </div>
-  </a>
-<% }) %>
-
+      <h2><%= nomeGrupo %></h2>
+    <% if (tarefas.length > 0) { %>
+      <% tarefas.forEach(tarefa => { %>
+        <a href="/tarefa/<%= tarefa.nome_tarefa %>" class="card-link">
+          <div class="card">
+            <div class="card-header"><%= tarefa.nome_tarefa %></div>
+            <div class="card-body">
+              <div class="card-title">
+                <span><%= new Date(tarefa.prazoTarefa).toLocaleDateString() %></span>
+              </div>
+              <div class="card-description"><%= tarefa.descricao_tarefa %></div>
+              <div class="card-creator">Criador: <%= tarefa.nome_usuario %></div>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    <% } else { %>
+      <p>Nenhuma tarefa encontrada neste grupo.</p>
+    <% } %>
   </div>
 </body>
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </html>

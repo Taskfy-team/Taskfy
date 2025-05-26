@@ -69,7 +69,7 @@ async function buscarUsuario(usuario)
 async function buscarGruposDoUsuario(idUsuario) {
     const conexao = await conectarBD();
     const sql = `
-        SELECT nome_equipe, desc_equipe, status_equipe 
+        SELECT equipes.id_equipe, nome_equipe, desc_equipe, status_equipe 
         FROM equipes 
         INNER JOIN usuario_equipe ON equipes.id_equipe = usuario_equipe.fk_equipe 
         INNER JOIN usuario ON usuario_equipe.fk_usuario = usuario.id_usuario 
@@ -79,4 +79,17 @@ async function buscarGruposDoUsuario(idUsuario) {
     return grupos;
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario};
+
+async function buscarTarefasPorGrupo(idGrupo) {
+    const conexao = await conectarBD();
+    const sql = `
+        SELECT nome_tarefa, descricao_tarefa, status_tarefa, prazoTarefa, nome_usuario 
+        FROM tarefas 
+        INNER JOIN usuario ON tarefas.fk_dono_tarefa = usuario.id_usuario 
+        WHERE tarefas.fk_equipe = ?;
+    `;
+    const [tarefas] = await conexao.query(sql, [idGrupo]);
+    return tarefas;
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo};
