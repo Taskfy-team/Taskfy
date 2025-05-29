@@ -113,7 +113,7 @@ function menuNavbar(x) {
   return `
     <div class="sidebar">
       <div class="sidebar-header">
-        <a href="#homePage"><img src="../../public/images/minilogo.png" alt="Logo" class="sidebar-logo"></a>
+        <a href="#homePage"><img src="images/minilogo.png" alt="Logo" class="sidebar-logo"></a>
       </div>
       <ul class="sidebar-menu">
         <li class="menu-item ${grupos}">
