@@ -92,4 +92,13 @@ async function buscarTarefasPorGrupo(idGrupo) {
     return tarefas;
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo};
+//Buscar adm
+async function buscarAdmin(admin) {
+  const conexao = await conectarBD();
+  const sql = "SELECT * FROM admin WHERE email_admin = ? AND senha_admin = ?";
+  const [resultado] = await conexao.query(sql, [admin.email, admin.senha]);
+
+  return resultado.length > 0 ? resultado[0] : {};
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin};
