@@ -29,31 +29,31 @@
       </li>
     </ul>
     <div class="sidebar-footer">
-      <img src="icons/user.svg" alt="Usuário" class="user-icon">
-      <p>Configurações</p>
+      <a href="/logout" class="logout-button">Sair</a>
     </div>
   </div>
   <main>
     <h1>Administrar Usuários</h1>
-<form class="filtros" method="POST" action="/buscar-usuarios">
-  <label for="grupo">Grupo:</label>
-  <select id="grupo" name="grupo">
-    <option value="">Selecionar</option>
-    <option value="grupo1">Grupo 1</option>
-    <option value="grupo2">Grupo 2</option>
-  </select>
+    <form class="filtros" method="POST" action="/buscar-usuarios">
+      <label for="grupo">Grupo:</label>
+      <select id="grupo" name="grupo">
+        <option value="">Selecionar</option>
+        <option value="grupo1">Grupo 1</option>
+        <option value="grupo2">Grupo 2</option>
+      </select>
 
-  <label for="nome">Nome:</label>
-  <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
 
-  <label for="data">Data:</label>
-  
-  <input type="date" id="data" name="data">
-  <button type="submit" class="buscar">Buscar</button>
-  <button type="button" class="exportar">Exportar<ion-icon name="download-outline" size="medium"></ion-icon></button>
-  <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
-  <button type="button" class="criar">Criar +</button>
-</form>
+      <label for="data">Data:</label>
+
+      <input type="date" id="data" name="data">
+      <button type="submit" class="buscar">Buscar</button>
+      <button type="button" class="exportar">Exportar<ion-icon name="download-outline"
+          size="medium"></ion-icon></button>
+      <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
+      <button type="button" class="criar">Criar +</button>
+    </form>
 
     <section class="tabela-usuarios">
       <table>
@@ -71,30 +71,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>06/06/23</td>
-            <td>Otávio</td>
-            <td>08/06/2005</td>
-            <td>9 8844-6568</td>
-            <td>Ativo</td>
-            <td>Sim</td>
-            <td>otavio@email.com</td>
-            <td><button><ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon></button></td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>06/06/23</td>
-            <td>Otávio</td>
-            <td>08/06/2005</td>
-            <td>9 8844-6568</td>
-            <td>Ativo</td>
-            <td>Sim</td>
-            <td>otavio@email.com</td>
-            <td><button><ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon></button></td>
-          </tr>
+          <% usuarios.forEach(usuario=> { %>
+            <tr>
+              <td><input type="checkbox" value="<%= usuario.id_usuario %>" /></td>
+              <td>
+                <%= usuario.dataCriacao.toLocaleDateString() %>
+              </td>
+              <td>
+                <%= usuario.nome_usuario %>
+              </td>
+              <td>
+                <%= usuario.dataNascimento.toLocaleDateString() %>
+              </td>
+              <td>
+                <%= usuario.numeroTelefone %>
+              </td>
+              <td>
+                <%= usuario.status %>
+              </td>
+              <td>
+                <%= usuario.email_usuario %>
+              </td>
+              <td><button><ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon></button></td>
+            </tr>
+            <% }); %>
         </tbody>
       </table>
     </section>
@@ -103,4 +103,5 @@
 </body>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 </html>

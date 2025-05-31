@@ -101,4 +101,17 @@ async function buscarAdmin(admin) {
   return resultado.length > 0 ? resultado[0] : {};
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin};
+//buscar todos usuários para adm
+async function buscarTodosUsuarios() {
+  const conexao = await conectarBD();
+  const sql = `
+    SELECT id_usuario, nome_usuario, email_usuario, dataNascimento, 
+           dataCriacao, numeroTelefone, status
+    FROM usuario;
+  `;
+  const [usuarios] = await conexao.query(sql);
+  return usuarios;
+}
+
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios};
