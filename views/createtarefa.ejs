@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskfy Criar Tarefa</title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/createtarefa.css">
+</head>
+
+<body>
+<div class="group-container">
+  <form action="/cadastrartarefa" method="post" class="main-card">
+    <h2>Criar Tarefa</h2>
+    <p>Atividade que faz parte de um grupo. Pode ser atribuída, editada e marcada como concluída.</p>
+    <input type="hidden" name="grupo" value="<%= grupo %>">
+    <label class="label">
+      <span class="field">Nome da Tarefa</span></br>
+      <input type="text" name="taskname" placeholder=" Ex: Tarefa 1"/>
+    </label>
+    <label class="label">
+      <span class="field">Descrição da Tarefa</span></br>
+      <input type="text" name="taskdesc" placeholder=" Ex: Realizar 1+1" />
+    </label>
+    <label class="label">
+      <span class="field">Adicionar Colaboradores (Email)</span></br>
+      <input type="text" name="taskcolabs" placeholder=" Adicionar Colaboradores"/>
+    </label>
+    <label class="label">
+      <span class="field">Data de Entrega</span></br>
+      <input type="date" name="user" />
+    </label>
+    <label class="label">
+      <span class="field">Status Inicial da tarefa</span></br>
+      <select name="taskinitstat">
+        <option value="Aberta">Aberta</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Fechada">Fechada</option>
+      </select>
+    </label>
+    <button class="btn-submit">Criar</button>
+  </form>
+</div>
+
+</body>
+<script>
+    initMenu("criar");
+</script>
+</html>

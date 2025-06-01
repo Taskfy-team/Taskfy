@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 01/06/2025 às 03:44
+-- Tempo de geração: 25/05/2025 às 20:38
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -34,14 +34,6 @@ CREATE TABLE `admin` (
   `senha_admin` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `admin`
---
-
-INSERT INTO `admin` (`id_admin`, `nome_admin`, `email_admin`, `senha_admin`) VALUES
-(1, 'otavio', 'otavio@email.com', '123'),
-(2, 'gustavo', 'gustavo@gmail.com', '123');
-
 -- --------------------------------------------------------
 
 --
@@ -67,18 +59,8 @@ CREATE TABLE `equipes` (
   `id_equipe` int(11) NOT NULL,
   `nome_equipe` varchar(20) DEFAULT NULL,
   `desc_equipe` varchar(40) DEFAULT NULL,
-  `status_equipe` varchar(10) DEFAULT NULL,
-  `donoEquipe` int(11) DEFAULT NULL
+  `status_equipe` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `equipes`
---
-
-INSERT INTO `equipes` (`id_equipe`, `nome_equipe`, `desc_equipe`, `status_equipe`, `donoEquipe`) VALUES
-(1, 'equipe alfa', 'equipe de teste alfa', 'ativo', 1),
-(2, 'equipe testes', 'segunda equipe para testes', 'ativo', 2),
-(3, 'batata', 'equipe batata', 'ativo', 2);
 
 -- --------------------------------------------------------
 
@@ -96,13 +78,6 @@ CREATE TABLE `tarefas` (
   `dataCriacao` date NOT NULL,
   `prazoTarefa` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `tarefas`
---
-
-INSERT INTO `tarefas` (`id_tarefa`, `nome_tarefa`, `descricao_tarefa`, `status_tarefa`, `fk_dono_tarefa`, `fk_equipe`, `dataCriacao`, `prazoTarefa`) VALUES
-(1, 'tarefa de teste', 'tarefa criada para teste', 'ativa', 1, 1, '2025-05-06', '2025-08-07');
 
 -- --------------------------------------------------------
 
@@ -132,7 +107,6 @@ CREATE TABLE `usuario` (
   `email_usuario` varchar(30) DEFAULT NULL,
   `senha_usuario` varchar(30) DEFAULT NULL,
   `dataNascimento` date DEFAULT NULL,
-  `dataCriacao` date DEFAULT NULL,
   `numeroTelefone` varchar(11) NOT NULL,
   `status` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -141,11 +115,10 @@ CREATE TABLE `usuario` (
 -- Despejando dados para a tabela `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nome_usuario`, `email_usuario`, `senha_usuario`, `dataNascimento`, `dataCriacao`, `numeroTelefone`, `status`) VALUES
-(1, 'adolfo', 'minecraftalemao@ww2.bol.com', '123', '1897-03-28', '2023-10-14', '', ''),
-(2, 'carlao', 'cal@ao.com', '123', '2001-09-15', '2021-01-28', '', ''),
-(4, 'evandro', 'evandro@email.com', '123', '1985-05-09', '2024-08-24', '988445555', 'ativo'),
-(5, 'marcos', 'marcos@email.com', '123', '2006-06-22', '2025-12-25', '999675742', 'ativo');
+INSERT INTO `usuario` (`id_usuario`, `nome_usuario`, `email_usuario`, `senha_usuario`, `dataNascimento`, `numeroTelefone`, `status`) VALUES
+(1, 'adolfo', 'minecraftalemao@ww2.bol.com', '123', NULL, '', ''),
+(2, 'carlao', 'cal@ao.com', '123', NULL, '', ''),
+(3, 'marcos', 'marc@os.com', '123', NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -158,18 +131,6 @@ CREATE TABLE `usuario_equipe` (
   `fk_equipe` int(11) DEFAULT NULL,
   `fk_usuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `usuario_equipe`
---
-
-INSERT INTO `usuario_equipe` (`id_usr_equipe`, `fk_equipe`, `fk_usuario`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 4),
-(4, 2, 5),
-(9, 2, 1),
-(10, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -206,8 +167,7 @@ ALTER TABLE `chat`
 -- Índices de tabela `equipes`
 --
 ALTER TABLE `equipes`
-  ADD PRIMARY KEY (`id_equipe`),
-  ADD KEY `fk_donoEquipe` (`donoEquipe`);
+  ADD PRIMARY KEY (`id_equipe`);
 
 --
 -- Índices de tabela `tarefas`
@@ -256,7 +216,7 @@ ALTER TABLE `usuario_tarefa`
 -- AUTO_INCREMENT de tabela `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `chat`
@@ -268,13 +228,13 @@ ALTER TABLE `chat`
 -- AUTO_INCREMENT de tabela `equipes`
 --
 ALTER TABLE `equipes`
-  MODIFY `id_equipe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_equipe` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `tarefas`
 --
 ALTER TABLE `tarefas`
-  MODIFY `id_tarefa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tarefa` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `timeline_tarefa`
@@ -286,13 +246,13 @@ ALTER TABLE `timeline_tarefa`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `usuario_equipe`
 --
 ALTER TABLE `usuario_equipe`
-  MODIFY `id_usr_equipe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_usr_equipe` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `usuario_tarefa`
@@ -311,12 +271,6 @@ ALTER TABLE `chat`
   ADD CONSTRAINT `fk_equipe_chat` FOREIGN KEY (`fk_equipe`) REFERENCES `equipes` (`id_equipe`),
   ADD CONSTRAINT `fk_tarefa_chat` FOREIGN KEY (`fk_tarefa`) REFERENCES `tarefas` (`id_tarefa`),
   ADD CONSTRAINT `fk_usuario_chat` FOREIGN KEY (`fk_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Restrições para tabelas `equipes`
---
-ALTER TABLE `equipes`
-  ADD CONSTRAINT `fk_donoEquipe` FOREIGN KEY (`donoEquipe`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Restrições para tabelas `tarefas`

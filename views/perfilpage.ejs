@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskfy Perfil</title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/perfilpage.css">
+</head>
+
+<body>
+<div class="group-container">
+  <div class="main-card">
+    <p class="main-title">Personalização de Perfil</p>
+    
+    <form class="perfCards" action="/perfil/atualizar" method="post" enctype="multipart/form-data">
+        <div class="perf-photo">
+            <img class="perf-img" src="/images/user.png" alt="Foto atual">
+            <div class="perf-alt">
+                <label for="novaFoto" style="cursor: pointer;">
+                    <img class="img-edit" src="/images/edit.png" alt="">
+                    <span>Mudar foto de perfil</span>
+                </label>
+                <input type="file" id="novaFoto" name="foto" accept="image/*" style="display:none;">
+            </div>
+        </div>
+
+        <div class="perf-name">
+            <p class="perf-full-name" id="nomeDisplay">User</p>
+            <div class="perf-alt">
+                <button type="button" id="btnEditarNome" style="background:none;border:none;cursor:pointer;">
+                    <img class="img-edit" src="/images/edit.png" alt="">
+                    <span>Mudar Nome</span>
+                </button>
+                <input type="text" id="novoNome" name="nome" style="display: none;" value="User">
+            </div>
+        </div>
+
+        <button type="submit" class="perf-exit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+
+</body>
+<script>
+    initMenu("perfil");
+     document.getElementById('btnEditarNome').addEventListener('click', function () {
+      document.getElementById('novoNome').style.display = 'inline-block';
+      document.getElementById('nomeDisplay').style.display = 'none';
+    });
+</script>
+</html>

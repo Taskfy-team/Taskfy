@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskfy Criar grupo</title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/creategrupo.css">
+</head>
+
+<body>
+<div class="group-container">
+  <form action="/creategrupo" method="post" class="main-card">
+    <h2>Criar Grupo</h2>
+    <p>Espaço colaborativo onde você organiza tarefas e pessoas com um objetivo em comum.</p>
+    <label class="label">
+      <span class="field">Nome do Grupo</span></br>
+      <input type="text" name="taskname" placeholder=" Ex: Grupo de Estudos"/>
+    </label>
+    <label class="label">
+      <span class="field">Descrição do Grupo</span></br>
+      <input type="text" name="taskdesc" placeholder=" Ex: Espaço colaborativo onde você organiza Tarefas" />
+    </label>
+    <label class="label">
+      <span class="field">Adicionar Membros (Email)</span></br>
+      <input type="text" name="taskcolabs" placeholder=" Adicionar Membros"/>
+    </label>
+    <label class="label">
+      <span class="field">Adicionar Administradores do grupo (Email)</span></br>
+      <input type="text" name="user" placeholder=" Adicionar Administradores"/>
+    </label>
+    <button class="btn-submit">Criar</button>
+  </form>
+</div>
+
+</body>
+<script>
+    initMenu("criar");
+</script>
+</html>

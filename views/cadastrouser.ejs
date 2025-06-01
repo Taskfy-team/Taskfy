@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/minilogo.png" type="image/png">
+    <title>Taskfy Criar Usuario</title>
+    <link rel="stylesheet" href="/stylesheets/cadatrouser.css">
+</head>
+<body>
+    <form action="/createuser" id="form" method="post">
+        <img src="/images/logo.png" width="45%" style="margin-top: 4vh;">
+        <input type="text" id="nome" name="nome" placeholder="   Nome" required>
+        <input type="email" id="email" name="email" placeholder="   Email" required>
+        <input type="password" id="senha" name="senha" placeholder="   Senha" required>
+        <input type="password" id="senha1" name="senha1" placeholder="   Repetir Senha" required>
+        <button type="submit">Cadastrar-se</button>
+        <a href="/login"><p>Já possui login? Logar</p></a>
+    </form>
+</body>
+ <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            const senha = document.getElementById('senha').value;
+            const senha1 = document.getElementById('senha1').value;
+
+            if (senha !== senha1) {
+                event.preventDefault();
+                alert('As senhas não coincidem!');
+            }
+        });
+    </script>
+</html>
