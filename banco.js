@@ -76,7 +76,16 @@ async function createGrupo(grupo) {
         global.usucodigo
     ]);
 
+    const idGrupo =  resultado.insertId;
+
     if (resultado.affectedRows > 0) {
+        const sql2 = "INSERT INTO usuario_equipe(fk_equipe, fk_usuario) VALUES (?, ?);";
+
+        const [resultados] = await conexao.query(sql2, [
+            idGrupo,
+            global.usucodigo
+        ]);
+
         return {
             sucesso: true
         };
@@ -120,10 +129,53 @@ async function createtarefa(tarefa) {
         tarefa.date_task
     ]);
 
+    const idTarefa = retono.insertId;
+
     console.log(retono);
-    return retono.affectedRows > 0;
+    if (retono.affectedRows > 0){
+        const sql2 = "INSERT INTO usuario_tarefa(fk_usuario, fk_tarefa) VALUES (?, ?);";
+
+        const [resultados] = await conexao.query(sql2, [
+            idTarefa,
+            global.usucodigo
+        ]);
+
+        return true;
+    }else{
+        return false;
+    }
 }
 
+async function cadastrarusu(usuario) {
+    const conexao = await conectarBD();
 
+    const sql = "INSERT INTO usuario (nome_usuario, email_usuario, senha_usuario) VALUES (?, ?, ?);";
+    
+    const [retorno] = await conexao.query(sql, [
+        usuario.nome,
+        usuario.email,
+        usuario.senha
+    ]);
 
-module.exports = { buscarUsuario, createGrupo, verficaacessotarefa, createtarefa }
+    if (retorno.affectedRows > 0) {
+        console.log("Usuário cadastrado com sucesso. ID:", retorno.insertId);
+        return true;
+    } else {
+        console.log("Erro ao cadastrar usuário.");
+        return false;
+    }
+}
+
+async function gettaskcoisas(task) {
+    const conexao = await conectarBD();
+
+    const sql = "SELECT * FROM tarefas WHERE id_tarefa = ?;";
+
+    const [rows] = await conexao.query(sql, [task.id]);
+    
+    console.log(rows);
+    
+    return rows; 
+}
+
+module.exports = { buscarUsuario, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas }

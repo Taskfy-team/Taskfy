@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Taskfy Tarefa 0000</title>
-    <script src="js/jquery.js"></script>
-    <script src="js/menu.js"></script>
-    <link rel="stylesheet" href="stylesheets/task.css" />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/menu.js"></script>
+    <link rel="stylesheet" href="/stylesheets/task.css" />
   </head>
   <body>
     <div class="group-container">
       <div class="main-task">
         <div class="task-header">
-          <div class="header-title"><b>TITULO TAREFA</b></div>
+          <div class="header-title"><b><%= tarefa.nome_tarefa %></b></div>
           <div style="display: flex; flex-direction: row">
             <div style="width: 50%">
-              <p>Status: Completo</p>
-              <p>Criado: 31-12-9999</p>
+              <p>Status: <%= tarefa.status_tarefa %> </p>
+              <p>Criado: <%= tarefa.dataCriacao %></p>
             </div>
             <div>
               <p>Colaboradores:</p>

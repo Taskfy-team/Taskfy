@@ -35,9 +35,9 @@ router.post('/creategrupo', async function(req, res, next) {
 
 });
 
-router.get('/createtarefa', async function(req, res, next) {
+router.get('/createtarefa/:grupo', async function(req, res, next) {
   verificarLogin(res);
-  const grupo = req.query.grupo;
+  const grupo = req.params.grupo;
 
   const verificadonotarefa = await global.banco.verficaacessotarefa({ grupo });
 
@@ -65,9 +65,9 @@ router.post('/cadastrartarefa', async function(req, res, next) {
   });
 
   if (sucesso) {
-    res.redirect('/task?grupo=' + grupo_task);
+    res.redirect('/task/' + grupo_task);
   } else {
-    res.redirect('/createtarefa?grupo=' + grupo_task);
+    res.redirect('/createtarefa/' + grupo_task);
   }
 });
 
@@ -98,7 +98,34 @@ router.post('/login', async function(req, res, next){
   
 });
 
+router.get('/cadastrarusuario', function(req, res, next) {
+  verificarLogin(res);
+  res.render('cadastrouser');
+});
 
+router.post('/createuser', async function(req, res, next) {
+  verificarLogin(res);
+  const nome = req.body.nome;
+  const email = req.body.email;
+  const senha = req.body.senha;
+
+  const cadastro =  await global.banco.cadastrarusu({ nome, email, senha});
+
+  if(cadastro){
+    res.redirect('/');
+  }else{
+    res.redirect('/cadastrousuario');
+  }
+});
+
+router.get('/task/:idtarefa', async function(req, res, next){
+  verificarLogin(res);
+  const id = req.params.idtarefa;
+
+  const [tarefa] = await global.banco.gettaskcoisas({ id });
+
+  res.render('task', { tarefa });
+});
 
 //
 // Funções de segurança

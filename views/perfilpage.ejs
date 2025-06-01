@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskfy Perfil</title>
-  <script src="js/jquery.js"></script>
-  <script src="js/menu.js"></script>
-  <link rel="stylesheet" href="stylesheets/perfilpage.css">
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/perfilpage.css">
 </head>
 
 <body>
@@ -17,10 +17,10 @@
     
     <form class="perfCards" action="/perfil/atualizar" method="post" enctype="multipart/form-data">
         <div class="perf-photo">
-            <img class="perf-img" src="images/user.png" alt="Foto atual">
+            <img class="perf-img" src="/images/user.png" alt="Foto atual">
             <div class="perf-alt">
                 <label for="novaFoto" style="cursor: pointer;">
-                    <img class="img-edit" src="images/edit.png" alt="">
+                    <img class="img-edit" src="/images/edit.png" alt="">
                     <span>Mudar foto de perfil</span>
                 </label>
                 <input type="file" id="novaFoto" name="foto" accept="image/*" style="display:none;">
@@ -31,7 +31,7 @@
             <p class="perf-full-name" id="nomeDisplay">User</p>
             <div class="perf-alt">
                 <button type="button" id="btnEditarNome" style="background:none;border:none;cursor:pointer;">
-                    <img class="img-edit" src="images/edit.png" alt="">
+                    <img class="img-edit" src="/images/edit.png" alt="">
                     <span>Mudar Nome</span>
                 </button>
                 <input type="text" id="novoNome" name="nome" style="display: none;" value="User">
