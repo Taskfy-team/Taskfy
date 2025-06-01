@@ -37,8 +37,6 @@ router.post('/login', async function (req, res, next) {
 
 });
 
-
-
 router.get('/logout', function(req, res) {
   global.usucodigo = null;
   global.usuemail = null;
@@ -64,8 +62,6 @@ router.get('/grupo/:id', async function(req, res) {
     nomeGrupo: `Grupo ${idGrupo}`
   });
 });
-
-
 
 // Verifica se tem usuario logado
 function verificarLogin(res) {

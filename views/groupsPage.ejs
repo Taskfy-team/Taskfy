@@ -41,16 +41,18 @@
   </div>
 
   <div class="group-container">
-<% grupos.forEach(grupo => { %>
-  <a href="/grupo/<%= grupo.id_equipe %>" class="group-card-link">
-    <div class="group-card">
-      <div class="group-title"><%= grupo.nome_equipe %></div>
-      <div class="group-description"><%= grupo.desc_equipe %></div>
-      <div class="group-tasks">Status: <%= grupo.status_equipe %></div>
-    </div>
-  </a>
-<% }) %>
-
+    <% grupos.forEach(grupo => { %>
+      <a href="/grupo/<%= grupo.id_equipe %>" class="group-card-link">
+        <div class="group-card">
+          <div class="group-title"><%= grupo.nome_equipe %></div>
+          <div class="group-description"><%= grupo.desc_equipe %></div>
+          <div class="group-tasks">Status: <%= grupo.status_equipe %></div>
+        </div>
+      </a>
+    <% }) %>
+    <a href="#criarGrupo" class="card-criarGP">
+      <div class="new-group-card"><ion-icon name="add-outline"></ion-icon></div>
+    </a>
   </div>
 </body>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
