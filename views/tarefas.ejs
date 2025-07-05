@@ -15,8 +15,7 @@
   <div style="display: flex; flex-direction: column; width: 100%;">
     <div class="group-container">
       <div style="display: flex; flex-direction: column;">
-        <h2><%= nomeGrupo %></h2>
-        <h3>Por: <%= donoGrupo %> </h3>
+        <h2>Minhas Tarefas</h2>
       </div>
         
       <% if (tarefas.length > 0) { %>
@@ -26,20 +25,16 @@
               <div class="card-header"><%= tarefa.nome_tarefa %></div>
               <div class="card-body">
                 <div class="card-title">
-                  <span><%= new Date(tarefa.prazoTarefa).toLocaleDateString() %></span>
+                  <span>Prazo: <%= new Date(tarefa.prazoTarefa).toLocaleDateString() %></span>
                 </div>
                 <div class="card-description"><%= tarefa.descricao_tarefa %></div>
+                <div class="card-description">Criador: <%= tarefa.nome_usuario === global.usunome ? "Você" : tarefa.nome_usuario  %></div>
               </div>
             </div>
           </a>
         <% }) %>
       <% } else { %>
-        <p>Nenhuma tarefa encontrada neste grupo.</p>
-      <% } %>
-      <% if(idDonoGrupo === global.usucodigo){ %>
-      <a href="/createtarefa/<%= idGrupo %>" class="card-criarGP">
-        <div class="new-group-card"><ion-icon name="add-outline"></ion-icon></div>
-      </a>
+        <p>Nenhuma tarefa encontrada.</p>
       <% } %>
     </div>
   </div>
@@ -47,6 +42,6 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
-  initMenu('grupos');
+  initMenu('tarefas');
 </script>
 </html>

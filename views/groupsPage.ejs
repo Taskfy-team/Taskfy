@@ -14,12 +14,16 @@
 <body>
   <div style="display: flex; flex-direction: column; width: 100%;">
     <div class="group-container">
+      <div style="display: flex; flex-direction: column;">
+        <h2>Meus Grupos</h2>
+      </div>
     <% grupos.forEach(grupo => { %>
       <a href="/grupo/<%= grupo.id_equipe %>" class="group-card-link">
         <div class="group-card">
           <div class="group-title"><%= grupo.nome_equipe %></div>
           <div class="group-description"><%= grupo.desc_equipe %></div>
           <div class="group-tasks">Status: <%= grupo.status_equipe %></div>
+          <div class="group-tasks">Criador: <%= grupo.nome_criador === global.usunome ? "Você" : grupo.nome_criador %></div>
         </div>
       </a>
     <% }) %>

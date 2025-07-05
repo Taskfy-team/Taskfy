@@ -102,9 +102,6 @@ function menuNavbar(x) {
     case "tarefas":
       tarefas = "active";
       break;
-    case "calendario":
-      calendario = "active";
-      break;
     case "criar":
       criar = "active";
       break;
@@ -119,11 +116,11 @@ function menuNavbar(x) {
         <li class="menu-item ${grupos}">
           <a href="/grupos"><ion-icon name="people-outline"></ion-icon> Grupos</a>
         </li>
-        <li class="menu-item ${calendario}">
-          <a href="#Calendario"><ion-icon name="calendar-outline"></ion-icon> Calendário</a>
+        <li class="menu-item ${tarefas}">
+          <a href="/tarefas"><ion-icon name="calendar-outline"></ion-icon> Tarefas</a>
         </li>
         <li class="menu-item ${criar}">
-          <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
+          <a href="/cadastrogrupo"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
         </li>
         <li class="menu-item" style="background-color: #EE204D;">
         <a href="/logout"><ion-icon name="log-in-outline"></ion-icon> Sair</a>
@@ -131,7 +128,7 @@ function menuNavbar(x) {
       </ul>
       <div class="sidebar-footer">
         <img src="icons/user.svg" alt="Usuário" class="user-icon">
-        <a href="" style="text-decoration:none;" class="menu-item ${configuracoes}">Configurações</a>
+        <a href="/perfil" style="text-decoration:none;" class="menu-item ${configuracoes}">Configurações</a>
         <a href="/logout" class="logout-button">Sair</a>
       </div>
     </div> 
