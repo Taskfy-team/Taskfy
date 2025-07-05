@@ -372,4 +372,24 @@ async function pertencetarefa(grupo) {
 
     return rows; 
 }
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa };
+
+async function buscardadosusr(usr) {
+    const conexao = await conectarBD();
+    const sql = "SELECT * FROM usuario WHERE usuario.id_usuario = ? ;";
+
+
+    const [rows] = await conexao.query(sql, [usr.id]);
+
+    return rows[0]; 
+}
+
+async function atualizardadosusr(usr) {
+    const conexao = await conectarBD();
+    const sql = "UPDATE usuario SET nome_usuario = ?, senha_usuario = ? WHERE id_usuario = ?;";
+
+    const [result] = await conexao.query(sql, [usr.nome, usr.senha, usr.id]);
+
+    return result.affectedRows > 0;
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa, buscardadosusr, atualizardadosusr };
