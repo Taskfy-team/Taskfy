@@ -127,9 +127,7 @@ function menuNavbar(x) {
       </li>
       </ul>
       <div class="sidebar-footer">
-        <img src="icons/user.svg" alt="Usuário" class="user-icon">
         <a href="/perfil" style="text-decoration:none;" class="menu-item ${configuracoes}">Configurações</a>
-        <a href="/logout" class="logout-button">Sair</a>
       </div>
     </div> 
   `;

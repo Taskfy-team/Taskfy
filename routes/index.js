@@ -213,8 +213,26 @@ router.post('/verificaremail', async function(req, res, next){
   res.json({ exists: existe });
 });
 
-router.get('/perfil', function(req, res, next){
-  res.render('perfilpage');
+router.get('/perfil', async function(req, res, next){
+  if (!verificarLogin(res)) return;
+  const id = global.usucodigo;
+
+  const dadosusr = await global.banco.buscardadosusr({ id });
+
+  console.log("AQUI" + dadosusr + "id: " + id);
+  res.render('perfilpage', { dadosusr });
+});
+
+router.post('/perfil/atualizar', async function(req, res, next){
+  if (!verificarLogin(res)) return;
+
+  const id = global.usucodigo;
+  const nome = req.body.nome;
+  const senha = req.body.senha;
+
+  await global.banco.atualizardadosusr({ nome, senha, id });
+
+  res.redirect('/perfil');
 });
 
 // Verifica se tem usuario logado

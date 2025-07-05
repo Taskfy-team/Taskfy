@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="icon" href="images/minilogo.png" type="image/png">
+  <title>Taskfy - Tarefas</title>
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
   <link rel="stylesheet" href="/stylesheets/cardFavoritas.css">
@@ -28,7 +29,7 @@
                   <span>Prazo: <%= new Date(tarefa.prazoTarefa).toLocaleDateString() %></span>
                 </div>
                 <div class="card-description"><%= tarefa.descricao_tarefa %></div>
-                <div class="card-description">Criador: <%= tarefa.nome_usuario === global.usunome ? "Você" : tarefa.nome_usuario  %></div>
+                <div class="card-description">Criador: <%= tarefa.id_usuario === global.usucodigo ? "Você" : tarefa.nome_usuario  %></div>
               </div>
             </div>
           </a>
