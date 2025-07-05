@@ -61,6 +61,32 @@ router.post('/buscar-usuarios', async (req, res) => {
   }
 });
 
+router.post('/usuarios/deletar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  const ids = req.body.ids;
+
+  if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+    console.error("IDs indefinidos ou ausentes");
+    return res.render('error', { message: 'Nenhum usuário selecionado para exclusão.' });
+  }
+
+  const idArray = Array.isArray(ids) ? ids : [ids];
+
+  try {
+    console.log("Excluindo IDs:", idArray);
+    await global.banco.excluirUsuariosPorIds(idArray);
+    res.redirect('/admin/usuarios');
+  } catch (error) {
+    console.error("Erro ao excluir usuários via procedure:", error);
+    res.render('error', { message: 'Erro ao excluir usuários.' });
+  }
+});
+
+
+
 
 
 

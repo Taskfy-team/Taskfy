@@ -434,6 +434,26 @@ async function buscarTodosGrupos() {
     return grupos;
 }
 
+async function excluirUsuariosPorIds(ids) {
+  const conexao = await conectarBD();
+
+  try {
+    await conexao.beginTransaction();
+
+    for (const id of ids) {
+      await conexao.query('CALL excluir_usuario_cascata(?)', [id]);
+    }
+
+    await conexao.commit();
+  } catch (error) {
+    await conexao.rollback();
+    throw error;
+  }
+}
+
+
+
+
 
 module.exports = {
   buscarUsuario,
@@ -455,5 +475,6 @@ module.exports = {
   buscarTarefasPorUsuario,
   pertencetarefa,
   buscardadosusr,
-  atualizardadosusr
+  atualizardadosusr,
+  excluirUsuariosPorIds
 };
