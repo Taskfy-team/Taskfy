@@ -123,7 +123,7 @@ function menuNavbar(x) {
           <a href="#Calendario"><ion-icon name="calendar-outline"></ion-icon> Calendário</a>
         </li>
         <li class="menu-item ${criar}">
-          <a href="#Criar"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
+          <a href="/cadastrogrupo"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
         </li>
         <li class="menu-item" style="background-color: #EE204D;">
         <a href="/logout"><ion-icon name="log-in-outline"></ion-icon> Sair</a>

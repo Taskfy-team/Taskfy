@@ -8,11 +8,52 @@
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
   <link rel="stylesheet" href="/stylesheets/createtarefa.css">
+  <style>
+    .email-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 6px;
+      height: 40px;         
+      background: #fff;
+      overflow-x: auto;      
+      white-space: nowrap;   
+    }
+
+    .email-list {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .email-input-wrapper input {
+      border: none;
+      outline: none;
+      flex: 0 0 auto;     
+      min-width: 120px;
+      padding: 4px 8px;
+      font: inherit;
+      white-space: nowrap;
+    }
+
+    .added-email{
+      display:inline-flex;
+      align-items:center;
+      background:#f0f0f0;
+      border:1px solid #4CAF50;
+      border-radius:4px;
+      padding:4px 8px;
+      font-size:.9rem;
+      white-space:nowrap;
+    }
+  </style>
 </head>
 
 <body>
 <div class="group-container">
-  <form action="/cadastrartarefa" method="post" class="main-card">
+  <form action="/cadastrartarefa" method="post" class="main-card" id="form">
     <h2>Criar Tarefa</h2>
     <p>Atividade que faz parte de um grupo. Pode ser atribuída, editada e marcada como concluída.</p>
     <input type="hidden" name="grupo" value="<%= grupo %>">
@@ -25,8 +66,16 @@
       <input type="text" name="taskdesc" placeholder=" Ex: Realizar 1+1" />
     </label>
     <label class="label">
-      <span class="field">Adicionar Colaboradores (Email)</span></br>
-      <input type="text" name="taskcolabs" placeholder=" Adicionar Colaboradores"/>
+      <span class="field">Adicionar Colaboradores (Email)</span><br>
+      <div class="email-input-wrapper" id="email-wrapper">
+        <div id="email-list" class="email-list"></div> <!-- chips vão aqui -->
+        <input
+          type="text"
+          id="taskcolabs"
+          placeholder=" Adicionar Membros"
+          autocomplete="off"
+        />
+      </div>
     </label>
     <label class="label">
       <span class="field">Data de Entrega</span></br>
@@ -47,5 +96,67 @@
 </body>
 <script>
     initMenu("criar");
+    const addedEmails = [];
+
+  function isValidEmail(email) {
+    const valid = /\S+@\S+\.\S+/.test(email);
+    return valid;
+  }
+
+  async function verificarEmailExistente(email) {
+    try {
+      const res = await fetch(`/verificaremail`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+      const json = await res.json();
+      console.log("📬 Resposta do servidor:", json);
+      return json.exists;
+    } catch (err) {
+      console.error("Erro ao verificar e-mail:", err);
+      return false;
+    }
+  }
+
+  function renderEmail(email){
+    $('#email-list').append(`<span class="added-email">${email}</span>`);
+    $('#form').append(`<input type="hidden" name="taskcolab" value="${email}">`);
+  }
+
+  $('#taskcolabs').on('keydown', async function(e) {
+    console.log("⌨️ Tecla pressionada:", e.key);
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+
+      const email = this.value.trim();
+      console.log("📩 E-mail digitado:", email);
+
+      if (!isValidEmail(email)) {
+        alert("Email inválido!");
+        return;
+      }
+
+      if (addedEmails.includes(email)) {
+        alert("Este e-mail já foi adicionado.");
+        this.value = "";
+        return;
+      }
+
+      const existe = await verificarEmailExistente(email);
+
+      if (existe) {
+        addedEmails.push(email);
+        renderEmail(email);
+        this.value = "";
+        console.log("✅ E-mail adicionado:", email);
+      } else {
+        alert("Email não encontrado.");
+        console.log("❌ E-mail não existe no sistema:", email);
+      }
+    }
+  });
 </script>
 </html>

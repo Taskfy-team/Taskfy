@@ -55,11 +55,12 @@ router.get('/grupo/:id', async function(req, res) {
   verificarLogin(res);
   const idGrupo = req.params.id;
   const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
+  const [grupo] = await global.banco.buscarnomegrupo(idGrupo);
 
   res.render('tarefasGrupo', {
     titulo: 'Tarefas do Grupo',
     tarefas,
-    nomeGrupo: `Grupo ${idGrupo}`,
+    nomeGrupo: `Grupo ${grupo.nome}`,
     idGrupo
   });
 });
@@ -71,14 +72,14 @@ router.get('/cadastrogrupo', function(req, res, next) {
 
 router.post('/creategrupo', async function(req, res, next) {
   verificarLogin(res);
+  console.log(req.body);
   const name_group = req.body.taskname;
   const desc_group = req.body.taskdesc;
-  const colab_group = req.body.taskcolabs;
-  const adm_colab_group = req.body.user;
+  const colab_group = req.body.taskcolab;
 
-  console.log("Dados recebidos em POST /creategrupo: ", name_group, desc_group, colab_group, adm_colab_group);
+  console.log("Dados recebidos em POST /creategrupo: ", name_group, desc_group, colab_group);
 
-  const insertsucesso = await global.banco.createGrupo({name_group,desc_group});
+  const insertsucesso = await global.banco.createGrupo({name_group,desc_group,colab_group});
 
   if (insertsucesso.sucesso){
     res.redirect('/grupos');
@@ -102,12 +103,12 @@ router.get('/createtarefa/:grupo', async function(req, res, next) {
 });
 
 router.get('/cadastrarusuario', function(req, res, next) {
-  verificarLogin(res);
+  //verificarLogin(res);
   res.render('cadastrouser');
 });
 
 router.post('/createuser', async function(req, res, next) {
-  verificarLogin(res);
+  //verificarLogin(res);
   const nome = req.body.nome;
   const email = req.body.email;
   const senha = req.body.senha;
@@ -134,11 +135,11 @@ router.post('/cadastrartarefa', async function(req, res, next) {
   verificarLogin(res);
   const name_task = req.body.taskname;
   const desc_task = req.body.taskdesc;
-  const colab_task = req.body.taskcolabs;
+  const colab_task = req.body.taskcolab;
   const date_task = req.body.user;
   const status_task = req.body.taskinitstat;
   const grupo_task = req.body.grupo;
-
+  console.log(req.body);
   console.log("Dados recebidos em POST /cadastrartarefa: ", name_task, desc_task, colab_task, date_task, status_task, grupo_task);
   
   const sucesso = await global.banco.createtarefa({ 
@@ -160,6 +161,17 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
 
   res.render('task', { tarefa });
 });
+
+router.post('/verificaremail', async function(req, res, next){
+  const id = req.body.email;
+  console.log("recebido:", id);
+
+  const existe = await global.banco.verificaremail({ id });
+  console.log("verificação:", existe);
+
+  res.json({ exists: existe });
+});
+
 
 // Verifica se tem usuario logado
 function verificarLogin(res) {

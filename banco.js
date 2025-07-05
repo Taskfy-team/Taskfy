@@ -68,16 +68,27 @@ async function buscarUsuario(usuario)
 //Função para retornar grupos do usuário
 async function buscarGruposDoUsuario(idUsuario) {
     const conexao = await conectarBD();
+
     const sql = `
-        SELECT equipes.id_equipe, nome_equipe, desc_equipe, status_equipe 
+        SELECT 
+            equipes.id_equipe, 
+            nome_equipe, 
+            desc_equipe, 
+            status_equipe, 
+            donoEquipe as criador_id,
+            criador.nome_usuario as nome_criador
         FROM equipes 
         INNER JOIN usuario_equipe ON equipes.id_equipe = usuario_equipe.fk_equipe 
-        INNER JOIN usuario ON usuario_equipe.fk_usuario = usuario.id_usuario 
-        WHERE usuario.id_usuario = ?;
+        INNER JOIN usuario AS membro ON usuario_equipe.fk_usuario = membro.id_usuario 
+        INNER JOIN usuario AS criador ON equipes.donoEquipe = criador.id_usuario
+        WHERE membro.id_usuario = ?;
     `;
+
     const [grupos] = await conexao.query(sql, [idUsuario]);
+
     return grupos;
 }
+
 
 
 async function buscarTarefasPorGrupo(idGrupo) {
@@ -118,35 +129,65 @@ async function buscarTodosUsuarios() {
 
 async function createGrupo(grupo) {
     const conexao = await conectarBD();
+    console.log(grupo);
 
     const sql = "INSERT INTO equipes(nome_equipe, desc_equipe, status_equipe, donoEquipe) VALUES (?, ?, 'ativo', ?);";
-
     const [resultado] = await conexao.query(sql, [
         grupo.name_group,
         grupo.desc_group,
         global.usucodigo
     ]);
 
-    const idGrupo =  resultado.insertId;
-    
+    const idGrupo = resultado.insertId;
+
     if (resultado.affectedRows > 0) {
+        // Adiciona o dono à equipe
         const sql2 = "INSERT INTO usuario_equipe(fk_equipe, fk_usuario) VALUES (?, ?);";
+        await conexao.query(sql2, [idGrupo, global.usucodigo]);
 
-        const [resultados] = await conexao.query(sql2, [
-            idGrupo,
-            global.usucodigo
-        ]);
+        // Garante que colab_group seja array
+        let colabs = [];
+        if (grupo.colab_group) {
+            if (Array.isArray(grupo.colab_group)) {
+                colabs = grupo.colab_group;
+            } else {
+                colabs = [grupo.colab_group]; // se for string única
+            }
+        }
 
-        return {
-            sucesso: true
-        };
+        // Adiciona colaboradores (se houver)
+        if (colabs.length > 0) {
+            console.log("➡️ Adicionando colaboradores:", colabs);
+            for (const email of colabs) {
+                console.log("🔍 Buscando:", email);
+                const [usuarios] = await conexao.query(
+                    "SELECT id_usuario FROM usuario WHERE email_usuario = ?",
+                    [email]
+                );
+                
+                console.log("🔎 Resultado SQL:", usuarios);
+
+                if (usuarios.length > 0) {
+                    const idUsuario = usuarios[0].id_usuario;
+                    console.log(`✅ Inserindo ${email} com ID ${idUsuario} na equipe`);
+
+                    await conexao.query(
+                        "INSERT INTO usuario_equipe(fk_equipe, fk_usuario) VALUES (?, ?)",
+                        [idGrupo, idUsuario]
+                    );
+                } else {
+                    console.warn(`⚠️ Usuário com e-mail ${email} não encontrado.`);
+                }
+            }
+        }
+
+        return { sucesso: true };
     } else {
-        return {
-            sucesso: false
-        };
+        return { sucesso: false };
     }
-   
 }
+
+
 
 async function verficaacessotarefa(grupo) {
     const conexao = await conectarBD();
@@ -182,18 +223,55 @@ async function createtarefa(tarefa) {
 
     const idTarefa = retono.insertId;
 
-    if (retono.affectedRows > 0){
-        const sql2 = "INSERT INTO usuario_tarefa(fk_usuario, fk_tarefa) VALUES (?, ?);";
+    if (retono.affectedRows > 0) {
+        // Adiciona o dono da tarefa
+        await conexao.query(
+            "INSERT INTO usuario_tarefa(fk_tarefa, fk_usuario) VALUES (?, ?);",
+            [idTarefa, global.usucodigo]
+        );
 
-        const [resultados] = await conexao.query(sql2, [
-            global.usucodigo,
-            idTarefa
-        ]);
+        // Garante que colab_task seja array
+        let colabs = [];
+        if (tarefa.colab_task) {
+            if (Array.isArray(tarefa.colab_task)) {
+                colabs = tarefa.colab_task;
+            } else {
+                colabs = [tarefa.colab_task]; // se for string única
+            }
+        }
+
+        // Adiciona colaboradores (se houver)
+        if (colabs.length > 0) {
+            console.log("➡️ Adicionando colaboradores:", colabs);
+            for (const email of colabs) {
+                console.log("🔍 Buscando:", email);
+                const [usuarios] = await conexao.query(
+                    "SELECT id_usuario FROM usuario WHERE email_usuario = ?",
+                    [email]
+                );
+                
+                console.log("🔎 Resultado SQL:", usuarios);
+
+                if (usuarios.length > 0) {
+                    const idUsuario = usuarios[0].id_usuario;
+                    console.log(`✅ Inserindo ${email} com ID ${idUsuario} na tarefa`);
+
+                    await conexao.query(
+                        "INSERT INTO usuario_tarefa(fk_tarefa, fk_usuario) VALUES (?, ?)",
+                        [idTarefa, idUsuario]
+                    );
+                } else {
+                    console.warn(`⚠️ Usuário com e-mail ${email} não encontrado.`);
+                }
+            }
+        }
+
         return true;
-    }else{
+    } else {
         return false;
     }
 }
+
 
 async function cadastrarusu(usuario) {
     const conexao = await conectarBD();
@@ -227,4 +305,32 @@ async function gettaskcoisas(task) {
     return rows; 
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas };
+async function verificaremail(email) {
+  const conexao = await conectarBD();
+
+  const sql = "SELECT COUNT(*) AS total FROM usuario WHERE email_usuario = ?;";
+  const [rows] = await conexao.query(sql, [email.id]);
+
+  const quantidade = rows[0].total;
+  console.log(quantidade);
+
+  return quantidade > 0;
+}
+
+async function buscarnomeusuario(userid) {
+    const conexao = await conectarBD();
+    const sql = "SELECT nome_usuario as nome FROM usuario WHERE id_usuario = ?;";
+
+    const [rows] = await conexao.query(sql, [userid]);
+    return rows; 
+}
+
+async function buscarnomegrupo(userid) {
+    const conexao = await conectarBD();
+    const sql = "SELECT nome_equipe as nome FROM equipes WHERE id_equipe = ?;";
+
+    const [rows] = await conexao.query(sql, [userid]);
+    return rows; 
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscarnomegrupo };
