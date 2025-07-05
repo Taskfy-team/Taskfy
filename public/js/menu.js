@@ -50,7 +50,6 @@ body {
   gap: 8px;
 }
 
-
 .menu-item {
   background-color: rgba(255, 255, 255, 0.4);
   padding: 8px 12px;
@@ -66,7 +65,6 @@ body {
   color: white;
 }
 
-
 .menu-item span {
   float: right;
 }
@@ -81,13 +79,11 @@ body {
   width: 28px;
   margin-bottom: 4px;
 }
-
 `;
 
 function menuNavbar(x) {
   let grupos = "";
   let tarefas = "";
-  let calendario = "";
   let criar = "";
   let usuario = "";
   let configuracoes = "";
@@ -123,8 +119,8 @@ function menuNavbar(x) {
           <a href="/cadastrogrupo"><ion-icon name="add-circle-outline"></ion-icon> Criar</a>
         </li>
         <li class="menu-item" style="background-color: #EE204D;">
-        <a href="/logout"><ion-icon name="log-in-outline"></ion-icon> Sair</a>
-      </li>
+          <a href="/admin/logout"><ion-icon name="log-in-outline"></ion-icon> Sair</a>
+        </li>
       </ul>
       <div class="sidebar-footer">
         <a href="/perfil" style="text-decoration:none;" class="menu-item ${configuracoes}">Configurações</a>
@@ -133,51 +129,9 @@ function menuNavbar(x) {
   `;
 }
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
 function initMenu(x) {
   var styleSheet = document.createElement("style");
   styleSheet.textContent = styles;
   document.head.appendChild(styleSheet);
-  //verificarLogin();
   $("body").prepend(menuNavbar(x));
 }
-
-//DEPENDENCIAS DO SITE - FRONTEND
-
-// const bootstrapCSS = document.createElement("link");
-// bootstrapCSS.rel = "stylesheet";
-// bootstrapCSS.href = BASE_URL_PORTALTST + "src/css/bootstrap.min.css";
-// document.head.appendChild(bootstrapCSS);
-
-// const bootstrapiconsCSS = document.createElement("link");
-// bootstrapiconsCSS.rel = "stylesheet";
-// bootstrapiconsCSS.href =
-//   "https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css";
-// document.head.appendChild(bootstrapiconsCSS);
-
-// const jqueryScript = document.createElement("script");
-// jqueryScript.src = BASE_URL_PORTALTST + "src/js/jquery.js";
-// jqueryScript.onload = () => {
-//   const popperScript = document.createElement("script");
-//   popperScript.src = BASE_URL_PORTALTST + "src/js/popper.min.js";
-//   popperScript.onload = () => {
-//     const bootstrapScript = document.createElement("script");
-//     bootstrapScript.src = BASE_URL_PORTALTST + "src/js/bootstrap.min.js";
-//     bootstrapScript.onload = () => {
-//       const validScript = document.createElement("script");
-//       validScript.src = BASE_URL_PORTALTST + "src/js/ajax/session/valid.js";
-//       validScript.onload = () => {
-//         initApp();
-//       };
-//       document.head.appendChild(validScript);
-//     };
-//     document.head.appendChild(bootstrapScript);
-//   };
-//   document.head.appendChild(popperScript);
-// };
-// document.head.appendChild(jqueryScript);

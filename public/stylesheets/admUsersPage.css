@@ -2,136 +2,149 @@
 
 * {
     font-family: "Poppins", sans-serif;
-}
-
-main {
-    width: 80%;
-    height: 100vh;
-    padding: 20px;
-    min-height: 100vh;
-    padding-left: 150px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff; 
+    box-sizing: border-box; /* ajuda no controle das larguras */
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  display: flex;
-  margin: 0;
+    display: flex;
+    height: 100vh; /* força ocupar a tela toda */
+    overflow: hidden; /* evitar scroll no body */
+    background-color: #f5f9ff;
 }
 
 main {
-  padding: 20px 30px;
-  width: 100%;
-  background-color: #f5f9ff;
-  min-height: 100vh;
+    flex-grow: 1; /* ocupar todo espaço restante */
+    padding: 20px 30px;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
-  font-size: 28px;
-  margin-bottom: 20px;
+    font-size: 28px;
+    margin-bottom: 20px;
 }
 
 .filtros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filtros label {
+    font-weight: 600;
 }
 
 .filtros input,
 .filtros select,
 .filtros button {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.filtros button {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    transform: scale(1);
+    border: none;
 }
 
 .filtros .buscar {
-  background-color: #2196f3;
-  color: white;
-  border: none;
+    background-color: #2196f3;
+    color: white;
 }
 
 .filtros .exportar,
 .filtros .criar {
-  background-color: #f0f0f0;
-  border: none;
+    background-color: #e0e0e0;
+    color: black;
 }
 
 .filtros .deletar {
-  background-color: #f44336;
-  color: white;
-  border: none;
-}
-
-.tabela-usuarios table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.tabela-usuarios th, .tabela-usuarios td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.tabela-usuarios th {
-  background-color: #2196f3;
-  color: white;
-}
-
-.paginacao {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  font-size: 14px;
-}
-
-.filtros button {
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  transform: scale(1);
-}
-
-.filtros .buscar {
-  background-color: #2196f3;
-  color: white;
-}
-
-.filtros .exportar {
-  background-color: #e0e0e0;
-  color: black;
-}
-
-.filtros .deletar {
-  background-color: #f44336;
-  color: white;
-}
-
-.filtros .criar {
-  background-color: #eeeeee;
-  color: black;
+    background-color: #f44336;
+    color: white;
 }
 
 .filtros button:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .filtros button:active {
-  transform: scale(0.95);
-  filter: brightness(0.9);
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+/* Tabela e scroll */
+
+.tabela-usuarios {
+    flex-grow: 1; /* para ocupar espaço vertical disponível */
+    overflow-y: auto; /* ativa scroll vertical quando necessário */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+.tabela-usuarios table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px; /* ajuda na responsividade horizontal */
+}
+
+.tabela-usuarios th,
+.tabela-usuarios td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap; /* evita quebra de texto dentro das células */
+}
+
+.tabela-usuarios th {
+    background-color: #2196f3;
+    color: white;
+    position: sticky;
+    top: 0; /* para header fixo ao rolar */
+    z-index: 1;
+}
+
+/* Se quiser um efeito para linhas ao passar mouse */
+.tabela-usuarios tbody tr:hover {
+    background-color: #f1f9ff;
+}
+
+/* Botão criar, exportar, deletar alinhados melhor */
+
+.filtros button.exportar,
+.filtros button.deletar,
+.filtros button.criar {
+    min-width: 90px;
+}
+
+/* Pequeno ajuste na responsividade */
+
+@media screen and (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+    .filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtros input,
+    .filtros select,
+    .filtros button {
+        width: 100%;
+    }
+    .tabela-usuarios table {
+        min-width: 0;
+        font-size: 12px;
+    }
 }

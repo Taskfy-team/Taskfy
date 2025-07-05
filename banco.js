@@ -392,4 +392,68 @@ async function atualizardadosusr(usr) {
     return result.affectedRows > 0;
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa, buscardadosusr, atualizardadosusr };
+//Query para buscar os usuários, é utilizada na rota '/buscar-usuarios'
+async function buscarUsuariosFiltrados(grupo, nome, dataCriacao) {
+  const conexao = await conectarBD();
+
+  let sql = `
+    SELECT DISTINCT u.id_usuario, u.nome_usuario, u.email_usuario, u.dataNascimento,
+           u.dataCriacao, u.numeroTelefone, u.status
+    FROM usuario u
+    INNER JOIN usuario_equipe ue ON ue.fk_usuario = u.id_usuario
+    INNER JOIN equipes e ON e.id_equipe = ue.fk_equipe
+    WHERE 1=1
+  `;
+  const params = [];
+
+  if (grupo) {
+    sql += ` AND e.nome_equipe LIKE ?`;
+    params.push(`%${grupo}%`);
+  }
+
+  if (nome) {
+    sql += ` AND u.nome_usuario LIKE ?`;
+    params.push(`%${nome}%`);
+  }
+
+  if (dataCriacao) {
+    sql += ` AND DATE(u.dataCriacao) = ?`;
+    params.push(dataCriacao);
+  }
+
+  const [usuarios] = await conexao.query(sql, params);
+  return usuarios;
+}
+
+
+//esta sendo utilizada na admUsersPage.ejs para carregar todos os grupos em um select/option
+async function buscarTodosGrupos() {
+    const conexao = await conectarBD();
+    const sql = "SELECT id_equipe, nome_equipe FROM equipes;";
+    const [grupos] = await conexao.query(sql);
+    return grupos;
+}
+
+
+module.exports = {
+  buscarUsuario,
+  buscarGruposDoUsuario,
+  buscarTarefasPorGrupo,
+  buscarTodosGrupos,
+  buscarAdmin,
+  buscarTodosUsuarios,
+  buscarUsuariosFiltrados, // <- adicione esta linha
+  createGrupo,
+  verficaacessotarefa,
+  createtarefa,
+  cadastrarusu,
+  gettaskcoisas,
+  verificaremail,
+  buscarnomeusuario,
+  buscargrupo,
+  pertencegrupo,
+  buscarTarefasPorUsuario,
+  pertencetarefa,
+  buscardadosusr,
+  atualizardadosusr
+};

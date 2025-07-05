@@ -13,13 +13,17 @@
 <body>
   <main>
     <h1>Administrar Usuários</h1>
-    <form class="filtros" method="POST" action="/buscar-usuarios">
+    <form class="filtros" method="POST" action="/admin/buscar-usuarios">
       <label for="grupo">Grupo:</label>
       <select id="grupo" name="grupo">
-        <option value="">Selecionar</option>
-        <option value="grupo1">Grupo 1</option>
-        <option value="grupo2">Grupo 2</option>
+        <option value="">Todos</option>
+        <% grupos.forEach(grupo=> { %>
+          <option value="<%= grupo.nome_equipe %>">
+            <%= grupo.nome_equipe %>
+          </option>
+          <% }); %>
       </select>
+
 
       <label for="nome">Nome:</label>
       <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
@@ -83,6 +87,6 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
-  initMenu('admin');
+  initMenu('admin', true); // passa "true" para indicar que é admin
 </script>
 </html>
