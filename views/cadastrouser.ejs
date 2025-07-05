@@ -11,6 +11,9 @@
     <form action="/createuser" id="form" method="post">
         <img src="/images/logo.png" width="45%" style="margin-top: 4vh;">
         <input type="text" id="nome" name="nome" placeholder="   Nome" required>
+        <% if (typeof erro !== 'undefined') { %>
+            <p class="erro"><%= erro %></p>
+        <% } %>
         <input type="email" id="email" name="email" placeholder="   Email" required>
         <input type="password" id="senha" name="senha" placeholder="   Senha" required>
         <input type="password" id="senha1" name="senha1" placeholder="   Repetir Senha" required>

@@ -65,7 +65,6 @@ async function buscarUsuario(usuario)
     }
 }
 
-//Função para retornar grupos do usuário
 async function buscarGruposDoUsuario(idUsuario) {
     const conexao = await conectarBD();
 
@@ -89,17 +88,32 @@ async function buscarGruposDoUsuario(idUsuario) {
     return grupos;
 }
 
-
-
 async function buscarTarefasPorGrupo(idGrupo) {
     const conexao = await conectarBD();
     const sql = `
         SELECT * 
         FROM tarefas 
         INNER JOIN usuario ON tarefas.fk_dono_tarefa = usuario.id_usuario 
+        INNER JOIN equipes on equipes.id_equipe = tarefas.fk_equipe
         WHERE tarefas.fk_equipe = ?;
     `;
     const [tarefas] = await conexao.query(sql, [idGrupo]);
+
+    console.log(tarefas);
+
+    return tarefas;
+}
+
+async function buscarTarefasPorUsuario(idUsuario) {
+    const conexao = await conectarBD();
+    const sql = `
+        SELECT * 
+        FROM tarefas 
+        INNER JOIN usuario_tarefa ON usuario_tarefa.fk_tarefa = tarefas.id_tarefa
+        INNER JOIN usuario ON usuario.id_usuario = tarefas.fk_dono_tarefa
+        WHERE usuario_tarefa.fk_usuario = ?;
+    `;
+    const [tarefas] = await conexao.query(sql, [idUsuario]);
 
     console.log(tarefas);
 
@@ -276,8 +290,15 @@ async function createtarefa(tarefa) {
 async function cadastrarusu(usuario) {
     const conexao = await conectarBD();
 
+    const sqlemail = "SELECT COUNT(*) AS veremail FROM usuario WHERE email_usuario = ?;";
+    const [verificacao] = await conexao.query(sqlemail, [usuario.email]);
+
+    if (verificacao[0].veremail > 0) {
+        console.log("Já existe um usuario com esse email");
+        return false;
+    }
+
     const sql = "INSERT INTO usuario (nome_usuario, email_usuario, senha_usuario) VALUES (?, ?, ?);";
-    
     const [retorno] = await conexao.query(sql, [
         usuario.nome,
         usuario.email,
@@ -292,6 +313,7 @@ async function cadastrarusu(usuario) {
         return false;
     }
 }
+
 
 async function gettaskcoisas(task) {
     const conexao = await conectarBD();
@@ -325,12 +347,29 @@ async function buscarnomeusuario(userid) {
     return rows; 
 }
 
-async function buscarnomegrupo(userid) {
+async function buscargrupo(userid) {
     const conexao = await conectarBD();
-    const sql = "SELECT nome_equipe as nome FROM equipes WHERE id_equipe = ?;";
+    const sql = "SELECT * FROM equipes INNER JOIN usuario ON usuario.id_usuario = equipes.donoEquipe WHERE id_equipe = ?;";
 
     const [rows] = await conexao.query(sql, [userid]);
     return rows; 
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscarnomegrupo };
+async function pertencegrupo(grupo) {
+    const conexao = await conectarBD();
+    const sql = "SELECT COUNT(*) AS pertence FROM usuario_equipe WHERE fk_usuario = ? AND fk_equipe = ?;";
+
+    const [rows] = await conexao.query(sql, [global.usucodigo, grupo.idGrupo]);
+
+    return rows; 
+}
+
+async function pertencetarefa(grupo) {
+    const conexao = await conectarBD();
+    const sql = "SELECT COUNT(*) AS pertence FROM usuario_tarefa WHERE fk_usuario = ? AND fk_tarefa = ?;";
+
+    const [rows] = await conexao.query(sql, [global.usucodigo, grupo.id]);
+
+    return rows; 
+}
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa };

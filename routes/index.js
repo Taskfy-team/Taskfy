@@ -27,6 +27,7 @@ router.post('/login', async function (req, res, next) {
   if (usuario.id_usuario) {
     global.usucodigo = usuario.id_usuario;
     global.usuemail = usuario.email_usuario;
+    global.usunome  = usuario.nome_usuario;
 
     res.redirect('/grupos');
 
@@ -44,7 +45,7 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/grupos', async function (req, res) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
 
   const grupos = await global.banco.buscarGruposDoUsuario(global.usucodigo);
 
@@ -52,26 +53,57 @@ router.get('/grupos', async function (req, res) {
 });
 
 router.get('/grupo/:id', async function(req, res) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
+
   const idGrupo = req.params.id;
+
+  const acessogrupo = await global.banco.pertencegrupo({ idGrupo });
+
+  if (acessogrupo[0].pertence === 0) {
+    return res.send("sem acesso");
+  }
+
   const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
-  const [grupo] = await global.banco.buscarnomegrupo(idGrupo);
+  const [grupo] = await global.banco.buscargrupo(idGrupo);
+
+  let donoGrupo = grupo.nome_usuario;
+
+  if (grupo.nome_usuario === global.usunome) {
+    donoGrupo = "Você";
+  }
 
   res.render('tarefasGrupo', {
     titulo: 'Tarefas do Grupo',
     tarefas,
-    nomeGrupo: `Grupo ${grupo.nome}`,
+    nomeGrupo: `Grupo ${grupo.nome_equipe}`,
+    donoGrupo,
+    idDonoGrupo: grupo.id_usuario,
     idGrupo
   });
 });
 
+router.get('/tarefas', async function(req, res) {
+  if (!verificarLogin(res)) return;
+
+  const tarefas = await global.banco.buscarTarefasPorUsuario(global.usucodigo);
+
+  let nomeDono = "";
+
+  res.render('tarefas', {
+    titulo: 'Tarefas do Grupo',
+    tarefas,
+    nomeDono,
+    donoGrupo: global.usunome
+  });
+});
+
 router.get('/cadastrogrupo', function(req, res, next) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
   res.render('creategrupo');
 });
 
 router.post('/creategrupo', async function(req, res, next) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
   console.log(req.body);
   const name_group = req.body.taskname;
   const desc_group = req.body.taskdesc;
@@ -90,7 +122,7 @@ router.post('/creategrupo', async function(req, res, next) {
 });
 
 router.get('/createtarefa/:grupo', async function(req, res, next) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
   const grupo = req.params.grupo;
 
   const verificadonotarefa = await global.banco.verficaacessotarefa({ grupo });
@@ -118,12 +150,13 @@ router.post('/createuser', async function(req, res, next) {
   if(cadastro){
     res.redirect('/');
   }else{
-    res.redirect('/cadastrousuario');
+    res.render('cadastrouser', { erro: "Já existe um usuario com esse email!" });
+
   }
 });
 
 router.post('/cadastraratarefa/:idtarefa', async function(req, res, next){
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
   const id = req.params.idtarefa;
 
   const [tarefa] = await global.banco.gettaskcoisas({ id });
@@ -132,7 +165,7 @@ router.post('/cadastraratarefa/:idtarefa', async function(req, res, next){
 });
 
 router.post('/cadastrartarefa', async function(req, res, next) {
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
   const name_task = req.body.taskname;
   const desc_task = req.body.taskdesc;
   const colab_task = req.body.taskcolab;
@@ -154,8 +187,15 @@ router.post('/cadastrartarefa', async function(req, res, next) {
 });
 
 router.get('/tarefa/:idtarefa', async function(req, res, next){
-  verificarLogin(res);
+  if (!verificarLogin(res)) return;
+
   const id = req.params.idtarefa;
+
+  const acessotarefa = await global.banco.pertencetarefa({ id });
+
+  if (acessotarefa[0].pertence === 0) {
+    return res.send("sem acesso");
+  }
 
   const [tarefa] = await global.banco.gettaskcoisas({ id });
 
@@ -163,6 +203,7 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
 });
 
 router.post('/verificaremail', async function(req, res, next){
+  if (!verificarLogin(res)) return;
   const id = req.body.email;
   console.log("recebido:", id);
 
@@ -172,10 +213,16 @@ router.post('/verificaremail', async function(req, res, next){
   res.json({ exists: existe });
 });
 
+router.get('/perfil', function(req, res, next){
+  res.render('perfilpage');
+});
 
 // Verifica se tem usuario logado
 function verificarLogin(res) {
-  if (!global.usuemail || global.usuemail == "")
+  if (!global.usuemail || global.usuemail == ""){
     res.redirect('/');
+    return false;
+  }
+    return true;
 }
 module.exports = router;
