@@ -345,7 +345,7 @@ async function buscarUsuariosFiltrados(grupo, nome, dataCriacao) {
 // Buscar todas tarefas ordenadas por dataCriacao (view deve ter essa coluna)
 async function buscarTodasTarefas() {
     const conexao = await conectarBD();
-    const sql = 'SELECT * FROM vw_tarefas_por_grupo ORDER BY dataCriacao DESC;';
+    const sql = 'SELECT * FROM vw_tarefas_por_grupo ORDER BY prazoTarefa DESC;';
     const [tarefas] = await conexao.query(sql);
     return tarefas;
 }
@@ -480,8 +480,21 @@ async function excluirgp(params) {
   return rows;
 }
 
+async function obterQtdMembrosPorEquipe() {
+  const conexao = await conectarBD(); // Faltava isso!
+  const sql = `
+    SELECT e.nome_equipe, COUNT(ue.fk_usuario) AS total_membros
+    FROM equipes e
+    LEFT JOIN usuario_equipe ue ON ue.fk_equipe = e.id_equipe
+    GROUP BY e.id_equipe
+  `;
+  const [resultado] = await conexao.query(sql);
+  return resultado;
+}
+
 
 module.exports = {
+    obterQtdMembrosPorEquipe,
     conectarBD,
     buscarUsuario,
     buscarGruposDoUsuario,

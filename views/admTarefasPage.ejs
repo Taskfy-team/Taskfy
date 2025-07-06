@@ -7,7 +7,7 @@
   <title><%= titulo %></title>
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
-  <link rel="stylesheet" href="/stylesheets/admUsersPage.css" />
+  <link rel="stylesheet" href="/stylesheets/admTarefasPage.css" />
 </head>
 
 <body>
@@ -32,7 +32,6 @@
         <thead>
           <tr>
             <th>Nome da Tarefa</th>
-            <th>Descrição</th>
             <th>Status</th>
             <th>Data de Criação</th>
             <th>Prazo</th>
@@ -49,12 +48,11 @@
             <% tarefas.forEach(tarefa => { %>
               <tr>
                 <td><%= tarefa.nome_tarefa %></td>
-                <td><%= tarefa.descricao_tarefa %></td>
                 <td><%= tarefa.status_tarefa %></td>
                 <td><%= new Date(tarefa.dataCriacao).toLocaleDateString() %></td>
                 <td><%= tarefa.prazoTarefa ? new Date(tarefa.prazoTarefa).toLocaleDateString() : '-' %></td>
                 <td><%= tarefa.nome_dono || 'Sem dono' %></td>
-                <td><%= tarefa.nome_grupo || 'Sem grupo' %></td>
+                <td><%= tarefa.nome_equipe || 'Sem grupo' %></td>
               </tr>
             <% }); %>
           <% } %>
