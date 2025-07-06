@@ -86,6 +86,54 @@ router.post('/usuarios/deletar', async (req, res) => {
 });
 
 
+// GET - Listar todas as tarefas
+router.get('/tarefas', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  try {
+    const tarefas = await buscarTodasTarefas();
+    res.render('admTarefasPage', { titulo: 'Administração de Tarefas', tarefas });
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    res.render('error', { mensagem: 'Erro ao carregar tarefas.' });
+  }
+});
+
+// POST - Buscar tarefas com filtros (nome e data)
+router.post('/tarefas/buscar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  const { nome, data } = req.body;
+  const conexao = await global.banco.conectarBD();
+
+  try {
+    let sql = `SELECT * FROM vw_tarefas_por_grupo WHERE 1=1`;
+    const params = [];
+
+    if (nome && nome.trim() !== '') {
+      sql += ` AND nome_tarefa LIKE ?`;
+      params.push(`%${nome}%`);
+    }
+
+    if (data && data.trim() !== '') {
+      sql += ` AND DATE(dataCriacao) = ?`;
+      params.push(data);
+    }
+
+    sql += ` ORDER BY dataCriacao DESC`;
+
+    const [tarefas] = await conexao.query(sql, params);
+
+    res.render('admTarefasPage', { titulo: 'Administração de Tarefas', tarefas });
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    res.render('error', { mensagem: 'Erro ao buscar tarefas.' });
+  }
+});
 
 
 
