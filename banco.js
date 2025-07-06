@@ -531,6 +531,71 @@ async function excluirgp(params) {
   return rows;
 }
 
+async function buscarcolabtarefa(idTarefa) {
+    const conexao = await conectarBD();
+    const sql = "SELECT usuario.email_usuario AS email FROM usuario_tarefa  INNER JOIN usuario on usuario.id_usuario = usuario_tarefa.fk_usuario WHERE fk_tarefa = ?;";
+
+    const [rows] = await conexao.query(sql, [idTarefa]);
+
+    return rows;
+}
+
+async function adicionarcolabtarefa(params) {
+    const conexao = await conectarBD();
+
+    const sql = `
+        INSERT INTO usuario_tarefa (fk_usuario, fk_tarefa)
+        SELECT usuario.id_usuario, ?
+        FROM usuario
+        WHERE usuario.email_usuario = ?;
+    `;
+    const [rows] = await conexao.query(sql, [params.tarefa, params.email]);
+
+    return rows;
+}
+
+async function removercolabtarefa(params) {
+    const conexao = await conectarBD();
+
+    const sql = `
+        DELETE usuario_tarefa
+        FROM usuario_tarefa
+        INNER JOIN usuario ON usuario.id_usuario = usuario_tarefa.fk_usuario
+        WHERE usuario.email_usuario = ? AND usuario_tarefa.fk_tarefa = ?;
+    `;
+    
+    const [rows] = await conexao.query(sql, [params.email, params.tarefa]);
+
+    return rows;
+}
+
+async function alterarnometarefa(params) {
+    const conexao = await conectarBD();
+
+    const sql = `
+        UPDATE tarefas
+        SET tarefas.nome_tarefa = ?
+        WHERE tarefas.id_tarefa = ?;
+    `;
+    
+    const [rows] = await conexao.query(sql, [params.nometarefa, params.tarefa]);
+
+    return rows;
+}
+
+async function alterardesctarefa(params) {
+    const conexao = await conectarBD();
+
+    const sql = `
+        UPDATE tarefas
+        SET tarefas.descricao_tarefa = ?
+        WHERE tarefas.id_tarefa = ?;
+    `;
+    
+    const [rows] = await conexao.query(sql, [params.desc, params.tarefa]);
+
+    return rows;
+}
 
 module.exports = {
     conectarBD,
@@ -562,5 +627,10 @@ module.exports = {
     adicionarcolabgrupo,
     alterarnomegrupo,
     alterardescgrupo,
-    excluirgp
+    excluirgp,
+    buscarcolabtarefa,
+    adicionarcolabtarefa,
+    removercolabtarefa,
+    alterarnometarefa,
+    alterardesctarefa
 };

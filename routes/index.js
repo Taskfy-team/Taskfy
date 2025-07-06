@@ -66,6 +66,7 @@ router.get('/grupo/:id', async function(req, res) {
   const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
   const [grupo] = await global.banco.buscargrupo(idGrupo);
   const colabs = await global.banco.buscarcolabgrupo(idGrupo);
+
   let donoGrupo = grupo.nome_usuario;
 
   if (grupo.nome_usuario === global.usunome) {
@@ -199,8 +200,8 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
   }
 
   const [tarefa] = await global.banco.gettaskcoisas({ id });
-
-  res.render('task', { tarefa });
+  const colabs = await global.banco.buscarcolabtarefa(id);
+  res.render('task', { tarefa, colabs });
 });
 
 router.post('/verificaremail', async function(req, res, next){
@@ -273,6 +274,38 @@ router.post('/excluirgrupo', async function(req,res,next){
   const grupo = req.body.grupo;
 
   const excluirgp = await global.banco.excluirgp({grupo});
+  res.sendStatus(200);
+});
+
+router.post('/adicionarcolabtarefa', async function(req,res,next) {
+  const tarefa = req.body.tarefa;
+  const email = req.body.email;
+
+  const adicionar = await global.banco.adicionarcolabtarefa({tarefa, email});
+  res.sendStatus(200);
+});
+
+router.post('/removercolabtarefa', async function(req, res, next) {
+  const email = req.body.email;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.removercolabtarefa({tarefa, email});
+  res.sendStatus(200);
+});
+
+router.post('/salvarnometarefa', async function(req, res, next) {
+  const nometarefa = req.body.nometarefa;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.alterarnometarefa({nometarefa, tarefa});
+  res.sendStatus(200);
+});
+
+router.post('/salvardesctarefa', async function(req,res,next) {
+  const desc = req.body.desc;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.alterardesctarefa({desc, tarefa});
   res.sendStatus(200);
 });
 
