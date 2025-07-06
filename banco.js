@@ -392,4 +392,17 @@ async function atualizardadosusr(usr) {
     return result.affectedRows > 0;
 }
 
-module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa, buscardadosusr, atualizardadosusr };
+async function buscarcolabgrupo(idGrupo) {
+    const conexao = await conectarBD();
+    const sql = "SELECT usuario.email_usuario AS email FROM usuario_equipe  INNER JOIN usuario on usuario.id_usuario = usuario_equipe.fk_usuario WHERE fk_equipe = ?;";
+
+    const [rows] = await conexao.query(sql, [idGrupo]);
+
+    return rows;
+}
+
+async function removercolabgrupo(params) {
+    
+}
+
+module.exports = { buscarUsuario, buscarGruposDoUsuario, buscarTarefasPorGrupo, buscarAdmin, buscarTodosUsuarios, createGrupo, verficaacessotarefa, createtarefa, cadastrarusu, gettaskcoisas, verificaremail, buscarnomeusuario, buscargrupo, pertencegrupo, buscarTarefasPorUsuario, pertencetarefa, buscardadosusr, atualizardadosusr, buscarcolabgrupo, removercolabgrupo };
