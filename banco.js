@@ -188,28 +188,53 @@ async function createtarefa(tarefa) {
             [idTarefa, global.usucodigo]
         );
 
+        const sqlusers = `
+            SELECT usuario.email_usuario AS email 
+            FROM usuario_equipe  
+            INNER JOIN usuario ON usuario.id_usuario = usuario_equipe.fk_usuario 
+            WHERE fk_equipe = ? AND fk_usuario != ?
+        `;
+        const [users] = await conexao.query(sqlusers, [
+            tarefa.grupo_task,
+            global.usucodigo
+        ]);
+
         let colabs = [];
-        if (tarefa.colab_task) {
-            if (Array.isArray(tarefa.colab_task)) {
-                colabs = tarefa.colab_task;
-            } else {
-                colabs = [tarefa.colab_task];
+        //coloca os cara que já estão como colabs do grupo nas tarefa
+        if (users.length > 0) {
+            for (const user of users) {
+                colabs.push(user.email);
             }
         }
 
-        if (colabs.length > 0) {
-            for (const email of colabs) {
-                const [usuarios] = await conexao.query(
-                    "SELECT id_usuario FROM usuario WHERE email_usuario = ?",
-                    [email]
-                );
-                if (usuarios.length > 0) {
-                    const idUsuario = usuarios[0].id_usuario;
-                    await conexao.query(
-                        "INSERT INTO usuario_tarefa(fk_tarefa, fk_usuario) VALUES (?, ?);",
-                        [idTarefa, idUsuario]
-                    );
+        //evita dois mesmos usuarios entrar na mesma tarefa pa(os if)
+        if (tarefa.colab_task) {
+            if (Array.isArray(tarefa.colab_task)) {
+                for (const email of tarefa.colab_task) {
+                    if (!colabs.includes(email)) {
+                        colabs.push(email);
+                    }
                 }
+            } else {
+                if (!colabs.includes(tarefa.colab_task)) {
+                    colabs.push(tarefa.colab_task);
+                }
+            }
+        }
+
+
+        for (const email of colabs) {
+            const [usuarios] = await conexao.query(
+                "SELECT id_usuario FROM usuario WHERE email_usuario = ?",
+                [email]
+            );
+
+            if (usuarios.length > 0) {
+                const idUsuario = usuarios[0].id_usuario;
+                await conexao.query(
+                    "INSERT INTO usuario_tarefa(fk_tarefa, fk_usuario) VALUES (?, ?);",
+                    [idTarefa, idUsuario]
+                );
             }
         }
 
@@ -218,6 +243,7 @@ async function createtarefa(tarefa) {
         return false;
     }
 }
+
 
 async function cadastrarusu(usuario) {
     const conexao = await conectarBD();
@@ -392,6 +418,16 @@ async function excluirUsuariosPorIds(ids) {
 
 async function removercolabgrupo(params) {
     const conexao = await conectarBD();
+
+    const removerdasequipes = `DELETE usuario_tarefa
+                                FROM usuario_tarefa
+                                INNER JOIN usuario_equipe ON usuario_equipe.fk_usuario = usuario_tarefa.fk_usuario
+                                INNER JOIN usuario ON usuario.id_usuario = usuario_tarefa.fk_usuario
+                                WHERE usuario_equipe.fk_equipe = ? AND usuario.email_usuario = ?;
+                                `;
+
+    const [equipesremovidas] = await conexao.query(removerdasequipes, [params.grupo, params.email]);
+
     const sql = `DELETE usuario_equipe
                 FROM usuario_equipe
                 INNER JOIN usuario ON usuario.id_usuario = usuario_equipe.fk_usuario
@@ -400,7 +436,7 @@ async function removercolabgrupo(params) {
 
     const [rows] = await conexao.query(sql, [params.grupo, params.email]);
 
-    return rows;
+    return rows + equipesremovidas;
 }
 
 async function adicionarcolabgrupo(params) {
@@ -412,11 +448,27 @@ async function adicionarcolabgrupo(params) {
     FROM usuario
     WHERE usuario.email_usuario = ?;
   `;
-
   const [rows] = await conexao.query(sql, [params.grupo, params.email]);
-    console.log(rows);
+
+  const tarefasgruposql = `
+    SELECT id_tarefa FROM tarefas
+    WHERE fk_equipe = ?;
+  `;
+  const [tarefasgrupo] = await conexao.query(tarefasgruposql, [params.grupo]);
+
+  for (const tarefa of tarefasgrupo) {
+    const inserirTarefaSQL = `
+      INSERT INTO usuario_tarefa(fk_usuario, fk_tarefa) 
+      SELECT usuario.id_usuario, ?
+      FROM usuario
+      WHERE usuario.email_usuario = ?;
+    `;
+    await conexao.query(inserirTarefaSQL, [tarefa.id_tarefa, params.email]);
+  }
+
   return rows;
 }
+
 
 async function alterarnomegrupo(params) {
     const conexao = await conectarBD();
@@ -471,7 +523,6 @@ async function excluirgp(params) {
     [params.grupo]
   );
 
-  // 5. Finalmente, deletar o grupo
   const [rows] = await conexao.query(
     `DELETE FROM equipes WHERE id_equipe = ?;`,
     [params.grupo]

@@ -193,7 +193,7 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
   const id = req.params.idtarefa;
 
   const acessotarefa = await global.banco.pertencetarefa({ id });
-
+  console.log(acessotarefa);
   if (acessotarefa[0].pertence === 0) {
     return res.send("sem acesso");
   }
@@ -241,6 +241,7 @@ router.post('/removercolabgrupo', async function(req, res, next){
   const email = req.body.email;
 
   const remover = await global.banco.removercolabgrupo({grupo, email});
+  console.log(remover);
   res.sendStatus(200);
 });
 
