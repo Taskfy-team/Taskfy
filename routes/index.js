@@ -240,9 +240,39 @@ router.post('/removercolabgrupo', async function(req, res, next){
   const grupo = req.body.grupo;
   const email = req.body.email;
 
-  await global.banco.removercolabgrupo({grupo, email});
+  const remover = await global.banco.removercolabgrupo({grupo, email});
+  res.sendStatus(200);
+});
 
-  return;
+router.post('/adicionarcolabgrupo', async function(req, res, next) {
+  const grupo = req.body.grupo;
+  const email = req.body.email;
+
+  const adicionar = await global.banco.adicionarcolabgrupo({grupo, email});
+  res.sendStatus(200);
+});
+
+router.post('/salvarnomegrupo', async function(req,res,next){
+  const nomegrupo = req.body.nomegrupo;
+  const grupo = req.body.grupo;
+
+  const alterarnome = await global.banco.alterarnomegrupo({nomegrupo, grupo});
+  res.sendStatus(200);
+});
+
+router.post('/salvardescgrupo', async function(req, res, next){
+  const desc = req.body.desc;
+  const grupo = req.body.grupo;
+
+  const alterardesc = await global.banco.alterardescgrupo({desc, grupo});
+  res.sendStatus(200);
+});
+
+router.post('/excluirgrupo', async function(req,res,next){
+  const grupo = req.body.grupo;
+
+  const excluirgp = await global.banco.excluirgp({grupo});
+  res.sendStatus(200);
 });
 
 // Verifica se tem usuario logado

@@ -124,7 +124,7 @@
     }
     .editcolabs {
       width: 70%;
-      height: 300px;
+      height: 250px;
       display: flex;
       flex-wrap: wrap;
       background-color: #DAEDFF;
@@ -217,6 +217,20 @@
       font-size:.9rem;
       white-space:nowrap;
     }
+
+    .excluirgp {
+      width: 30%; 
+      font-size: 15px; 
+      margin-bottom: 5px; 
+      border-radius: 15px; 
+      background-color: #DAEDFF;
+      margin-top: 15px;
+    }
+
+    .excluirgp:hover{
+      background-color: #ff5c5c;
+      cursor: pointer;
+    }
   </style>
   <link rel="stylesheet" href="/stylesheets/cardFavoritas.css">
   <link rel="stylesheet" href="/stylesheets/groupsPage.css">
@@ -265,7 +279,7 @@
           <% if (colabs.length > 0) { %>
             <% colabs.forEach(colab => { %>
               <% if (colab.email !== global.usuemail) { %>
-                <div class="colab" id="<%= colab.email.replace(/[@.]/g, '-') %>">
+                <div class="colab" id="<%= colab.email %>">
                   <span class="fechar-colab" onclick="removerColab('<%= colab.email %>')">×</span>
                   <p class="nomecolab"><%= colab.email %></p>
                 </div>
@@ -284,6 +298,7 @@
             />
           </div>
         </label>
+        <button class="excluirgp" onclick="exluirgp()">Excluir Grupo!</button>
       </div>
     </div>
   </div>
@@ -373,7 +388,7 @@
       
     });
 
-  const addedEmails = [];
+  const addedEmails = ['<%= global.usuemail %>'];
 
   const elementos = document.querySelectorAll('.nomecolab');
   elementos.forEach(el => {
@@ -455,6 +470,7 @@
   });
 
   async function removerColab(email) {
+    console.log("Removendo " + email);
     const res = await fetch(`/removercolabgrupo`, {
         method: "POST",
         headers: {
@@ -462,7 +478,8 @@
         },
         body: JSON.stringify({ email, grupo: "<%= idGrupo %>" })
       });
-    document.getElementById(email).remove();
+
+    document.getElementById(`${email}`).remove();
 
     const index = addedEmails.indexOf(email);
 
@@ -490,6 +507,17 @@
         },
         body: JSON.stringify({ desc, grupo: "<%= idGrupo %>" })
       });
+  }
+
+  async function exluirgp(params) {
+    const res = await fetch(`/excluirgrupo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ grupo: "<%= idGrupo %>" })
+      });
+    window.open('/grupos','_self');
   }
 </script>
 </html>

@@ -309,9 +309,6 @@ async function buscarcolabgrupo(idGrupo) {
     return rows;
 }
 
-async function removercolabgrupo(params) {
-    
-}
 // Query para buscar os usuários, é utilizada na rota '/buscar-usuarios'
 async function buscarUsuariosFiltrados(grupo, nome, dataCriacao) {
     const conexao = await conectarBD();
@@ -393,6 +390,97 @@ async function excluirUsuariosPorIds(ids) {
     }
 }
 
+async function removercolabgrupo(params) {
+    const conexao = await conectarBD();
+    const sql = `DELETE usuario_equipe
+                FROM usuario_equipe
+                INNER JOIN usuario ON usuario.id_usuario = usuario_equipe.fk_usuario
+                WHERE usuario_equipe.fk_equipe = ? AND usuario.email_usuario = ?;
+                `;
+
+    const [rows] = await conexao.query(sql, [params.grupo, params.email]);
+
+    return rows;
+}
+
+async function adicionarcolabgrupo(params) {
+  const conexao = await conectarBD();
+
+  const sql = `
+    INSERT INTO usuario_equipe (fk_usuario, fk_equipe)
+    SELECT usuario.id_usuario, ?
+    FROM usuario
+    WHERE usuario.email_usuario = ?;
+  `;
+
+  const [rows] = await conexao.query(sql, [params.grupo, params.email]);
+    console.log(rows);
+  return rows;
+}
+
+async function alterarnomegrupo(params) {
+    const conexao = await conectarBD();
+    const sql = `UPDATE equipes
+                SET nome_equipe = ?
+                WHERE equipes.id_equipe = ?;
+                `;
+
+    const [rows] = await conexao.query(sql, [params.nomegrupo, params.grupo]);
+
+    return rows;
+}
+
+async function alterardescgrupo(params) {
+    const conexao = await conectarBD();
+    const sql = `UPDATE equipes
+                SET desc_equipe = ?
+                WHERE equipes.id_equipe = ?;
+                `;
+
+    const [rows] = await conexao.query(sql, [params.desc, params.grupo]);
+
+    return rows;
+}
+
+async function excluirgp(params) {
+  const conexao = await conectarBD();
+
+  const [tarefas] = await conexao.query(
+    `SELECT id_tarefa FROM tarefas WHERE fk_equipe = ?;`,
+    [params.grupo]
+  );
+
+  if (tarefas.length > 0) {
+    const idsTarefas = tarefas.map(t => t.id_tarefa);
+
+    const placeholders = idsTarefas.map(() => '?').join(',');
+
+    await conexao.query(
+      `DELETE FROM usuario_tarefa WHERE fk_tarefa IN (${placeholders});`,
+      idsTarefas
+    );
+  }
+
+  await conexao.query(
+    `DELETE FROM tarefas WHERE fk_equipe = ?;`,
+    [params.grupo]
+  );
+
+  await conexao.query(
+    `DELETE FROM usuario_equipe WHERE fk_equipe = ?;`,
+    [params.grupo]
+  );
+
+  // 5. Finalmente, deletar o grupo
+  const [rows] = await conexao.query(
+    `DELETE FROM equipes WHERE id_equipe = ?;`,
+    [params.grupo]
+  );
+
+  return rows;
+}
+
+
 module.exports = {
     conectarBD,
     buscarUsuario,
@@ -417,5 +505,11 @@ module.exports = {
     atualizardadosusr,
     buscarTodasTarefas,
     buscarTarefasFiltradas,
-    excluirUsuariosPorIds
+    excluirUsuariosPorIds,
+    buscarcolabgrupo,
+    removercolabgrupo,
+    adicionarcolabgrupo,
+    alterarnomegrupo,
+    alterardescgrupo,
+    excluirgp
 };
