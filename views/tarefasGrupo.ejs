@@ -8,21 +8,299 @@
   <title>Taskfy - Tarefas Grupo</title>
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
+  <style>
+    .configuracoesBotao {
+      box-shadow: -3px 3px 8px 0px #ffffff;
+      background-color:#cfcece;
+      border-radius:6px;
+      border:1px solid #dcdcdc;
+      color:#000000;
+      font-size:15px;
+      font-weight:bold;
+      padding:6px ;
+      text-decoration:none;
+      text-shadow:0px 1px 0px #ffffff;
+      width: fit-content;
+    }
+    .configuracoesBotao:hover {
+      background-color:#adadad;
+      cursor:pointer;
+    }
+    .configuracoesBotao:active {
+      position:relative;
+      top:1px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5); 
+      align-items: center;
+      justify-content: center;
+      z-index: 9998; 
+    }
+
+    .configuracoes {
+      background-color:   #ffffff;
+      width: 80vw;
+      height: 80vh;
+      box-shadow: -3px 3px 8px 0px #1f1e1e;
+      z-index: 9999;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      display: flex;
+      align-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .configuracoes h1{
+      border-bottom: solid #000000 5px;
+    }
+
+    .fechar-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff5c5c;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .perf-name {
+        width: 70%;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        align-content: center;
+        border-radius: 15px;
+    }
+    .perf-alt {
+        width: 40%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        font-size: small;
+        color: gray;
+    }
+    .img-edit {
+        width: 30px;
+        height: 30px;
+    }
+    .perf-full-name{
+      width: 50%;
+    }
+    .perf-botoes {
+      width: 70%;
+      height: 30%;
+      display: flex;
+      flex-direction: row;
+      background-color: #DAEDFF;
+      justify-content: space-around;
+      align-items: center;
+      align-content: center;
+      border-radius: 15px;
+    }
+    .configs {
+      display: flex;
+      flex-direction: column;
+      align-content: center;
+      align-items: center;
+      width: 100%;
+      max-height: 900px;
+    }
+    .editcolabs {
+      width: 70%;
+      height: 300px;
+      display: flex;
+      flex-wrap: wrap;
+      background-color: #DAEDFF;
+      border-radius: 15px;
+      overflow-y: auto;
+      flex-direction: row;
+      gap: 6px; 
+      padding: 10px;
+      align-content: flex-start; 
+    }
+
+    .colab {
+      position: relative;
+      background-color: #95ffa7;
+      border-radius: 15px;
+      padding: 4px 20px 4px 10px;
+      border: 1px solid black;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.2;
+      height: auto;
+    }
+
+    .nomecolab {
+      margin: 0;
+      line-height: 1;
+    }
+
+    .fechar-colab {
+      position: absolute;
+      top: 2px;
+      right: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #ff5c5c;
+      font-weight: bolder;
+    }
+
+    .label {
+      display: flex;
+      flex-direction: row;
+      background-color: #DAEDFF;
+      align-content: center;
+      align-items: center;
+      justify-content: space-around;
+      width: fit-content;
+      margin-top: 10px;
+      padding: 2px;
+      border-radius: 15px;
+    }
+
+    .email-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 6px;
+      height: 40px;         
+      background: #fff;
+      overflow-x: auto;      
+      white-space: nowrap;   
+    }
+
+    .email-list {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .email-input-wrapper input {
+      border: none;
+      outline: none;
+      flex: 0 0 auto;     
+      min-width: 120px;
+      padding: 4px 8px;
+      font: inherit;
+      white-space: nowrap;
+    }
+
+    .added-email{
+      display:inline-flex;
+      align-items:center;
+      background:#f0f0f0;
+      border:1px solid #4CAF50;
+      border-radius:4px;
+      padding:4px 8px;
+      font-size:.9rem;
+      white-space:nowrap;
+    }
+  </style>
   <link rel="stylesheet" href="/stylesheets/cardFavoritas.css">
   <link rel="stylesheet" href="/stylesheets/groupsPage.css">
 </head>
 
 <body>
+  <div class="overlay" id="overlay">
+    <div class="configuracoes">
+      <button class="fechar-btn" onclick="fecharPopup()">×</button>
+      <h1>Configurações Grupo</h1>
+      <div class="configs">
+        <div style="width: 100%;display: flex; align-items: center; align-content: center;">
+          <div class="perf-name">
+            <div>
+              <h2>Alterar nome</h2>
+            </div>
+            <div class="perf-botoes">
+              <p class="perf-full-name" id="nomeDisplay"><%= grupo.nome_equipe %></p>
+                <div class="perf-alt">
+                    <button type="button" id="btnEditarNome" style="background:none;border:none;cursor:pointer;">
+                        <img class="img-edit" src="/images/edit.png" alt="">
+                        <span id="txtnome">Mudar Nome</span>
+                    </button>
+                    <input type="text" id="novoNome" name="nome" style="display: none;" value="<%= grupo.nome_equipe %>">
+                </div>
+            </div>
+          </div>
+          <div class="perf-name">
+            <div>
+              <h2>Alterar Decrição</h2>
+            </div>
+            <div class="perf-botoes">
+              <p class="perf-full-name" id="senhaDisplay"><%= grupo.desc_equipe %></p>
+                <div class="perf-alt">
+                    <button type="button" id="btnEditarSenha" style="background:none;border:none;cursor:pointer;">
+                        <img class="img-edit" src="/images/edit.png" alt="">
+                        <span id="txtsenha">Mudar Descrição</span>
+                    </button>
+                    <input type="text" id="novasenha" name="nome" style="display: none;" value="<%= grupo.desc_equipe %>">
+                </div>
+            </div>
+          </div>
+        </div>
+        <h2>Alterar Colaboradores</h2>
+        <div class="editcolabs" id="editcolabs">
+          <% if (colabs.length > 0) { %>
+            <% colabs.forEach(colab => { %>
+              <% if (colab.email !== global.usuemail) { %>
+                <div class="colab" id="<%= colab.email.replace(/[@.]/g, '-') %>">
+                  <span class="fechar-colab" onclick="removerColab('<%= colab.email %>')">×</span>
+                  <p class="nomecolab"><%= colab.email %></p>
+                </div>
+              <% } %>
+            <% }) %>
+          <% } %>
+        </div>
+        <label class="label">
+          <span class="field">Adicionar Membros (Email)</span><br>
+          <div class="email-input-wrapper" id="email-wrapper">
+            <input
+              type="text"
+              id="taskcolabs"
+              placeholder=" Adicionar Membros"
+              autocomplete="off"
+            />
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+
   <div style="display: flex; flex-direction: column; width: 100%;">
     <div class="group-container">
       <div style="display: flex; flex-direction: column;">
         <h2><%= nomeGrupo %></h2>
         <h3>Por: <%= donoGrupo %> </h3>
+        <% if(idDonoGrupo === global.usucodigo){ %>
+        <a class="configuracoesBotao" onclick="abrirPopup()">Configurações</a>
+        <% } %>
       </div>
-        
       <% if (tarefas.length > 0) { %>
         <% tarefas.forEach(tarefa => { %>
-          <a href="/tarefa/<%= tarefa.id_tarefa %>" class="card-link">
+          <a href="/tarefa/<%= tarefa.id_tarefa %>" class="card-link" id="config">
             <div class="card">
               <div class="card-header"><%= tarefa.nome_tarefa %></div>
               <div class="card-body">
@@ -49,5 +327,169 @@
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
   initMenu('grupos');
+  function fecharPopup() {
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  function abrirPopup() {
+    document.getElementById('overlay').style.display = 'flex';
+  }
+  let nome = 1;
+    let senha = 1;
+
+    document.getElementById('btnEditarNome').addEventListener('click', function () {
+      if(nome === 1){
+        document.getElementById('novoNome').style.display = 'inline-block';
+        document.getElementById('nomeDisplay').style.display = 'none';
+        document.getElementById('txtnome').textContent = "Salvar Nome";
+        nome = 2;
+      }else{
+        let novonome = document.getElementById("novoNome").value;
+        salvarnomegrupo(novonome);
+        document.getElementById('nomeDisplay').textContent = novonome;
+        document.getElementById('novoNome').style.display = 'none';
+        document.getElementById('nomeDisplay').style.display = 'inline-block';
+        document.getElementById('txtnome').textContent = "Mudar Nome";
+        nome = 1;
+      }
+      
+    });
+
+    document.getElementById('btnEditarSenha').addEventListener('click', function () {
+      if(senha === 1){
+        document.getElementById('novasenha').style.display = 'inline-block';
+        document.getElementById('senhaDisplay').style.display = 'none';
+        document.getElementById('txtsenha').textContent = "Salvar Descrição";
+        senha = 2;
+      }else{
+        let novasenha = document.getElementById("novasenha").value;
+        salvardescgrupo(novasenha);
+        document.getElementById('senhaDisplay').textContent = novasenha;
+        document.getElementById('novasenha').style.display = 'none';
+        document.getElementById('senhaDisplay').style.display = 'inline-block';
+        document.getElementById('txtsenha').textContent = "Mudar Descrição";
+        senha = 1;
+      }
+      
+    });
+
+  const addedEmails = [];
+
+  const elementos = document.querySelectorAll('.nomecolab');
+  elementos.forEach(el => {
+    addedEmails.push(el.textContent.trim());
+  });
+
+  console.log(addedEmails);
+
+  function isValidEmail(email) {
+    const valid = /\S+@\S+\.\S+/.test(email);
+    return valid;
+  }
+
+  async function verificarEmailExistente(email) {
+    try {
+      const res = await fetch(`/verificaremail`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+      const json = await res.json();
+      console.log("📬 Resposta do servidor:", json);
+      return json.exists;
+    } catch (err) {
+      console.error("Erro ao verificar e-mail:", err);
+      return false;
+    }
+  }
+
+  function renderEmail(email) {
+  $('#editcolabs').append(`
+    <div class="colab" id="${email}">
+      <span class="fechar-colab" onclick="removerColab('${email}')">×</span>
+      <p class="nomecolab">${email}</p>
+    </div>
+  `);
+}
+
+  
+  $('#taskcolabs').on('keydown', async function(e) {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+
+      const email = this.value.trim();
+      console.log("📩 E-mail digitado:", email);
+
+      if (!isValidEmail(email)) {
+        alert("Email inválido!");
+        return;
+      }
+
+      if (addedEmails.includes(email)) {
+        alert("Este e-mail já foi adicionado.");
+        this.value = "";
+        return;
+      }
+
+      const existe = await verificarEmailExistente(email);
+
+      if (existe) {
+        addedEmails.push(email);
+        renderEmail(email);
+        const res = await fetch(`/adicionarcolabgrupo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, grupo: "<%= idGrupo %>" })
+      });
+        this.value = "";
+        console.log("✅ E-mail adicionado:", email);
+      } else {
+        alert("Email não encontrado.");
+        console.log("❌ E-mail não existe no sistema:", email);
+      }
+    }
+  });
+
+  async function removerColab(email) {
+    const res = await fetch(`/removercolabgrupo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, grupo: "<%= idGrupo %>" })
+      });
+    document.getElementById(email).remove();
+
+    const index = addedEmails.indexOf(email);
+
+    if (index !== -1) {
+      addedEmails.splice(index, 1);
+    }
+    console.log(addedEmails);
+  }
+
+  async function salvarnomegrupo(nomegrupo) {
+      const res = await fetch(`/salvarnomegrupo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nomegrupo, grupo: "<%= idGrupo %>" })
+      });
+  }
+
+  async function salvardescgrupo(desc) {
+      const res = await fetch(`/salvardescgrupo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ desc, grupo: "<%= idGrupo %>" })
+      });
+  }
 </script>
 </html>

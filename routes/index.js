@@ -65,20 +65,21 @@ router.get('/grupo/:id', async function(req, res) {
 
   const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
   const [grupo] = await global.banco.buscargrupo(idGrupo);
-
+  const colabs = await global.banco.buscarcolabgrupo(idGrupo);
   let donoGrupo = grupo.nome_usuario;
 
   if (grupo.nome_usuario === global.usunome) {
     donoGrupo = "Você";
   }
-
   res.render('tarefasGrupo', {
     titulo: 'Tarefas do Grupo',
     tarefas,
     nomeGrupo: `Grupo ${grupo.nome_equipe}`,
     donoGrupo,
     idDonoGrupo: grupo.id_usuario,
-    idGrupo
+    idGrupo,
+    grupo,
+    colabs
   });
 });
 
@@ -233,6 +234,15 @@ router.post('/perfil/atualizar', async function(req, res, next){
   await global.banco.atualizardadosusr({ nome, senha, id });
 
   res.redirect('/perfil');
+});
+
+router.post('/removercolabgrupo', async function(req, res, next){
+  const grupo = req.body.grupo;
+  const email = req.body.email;
+
+  await global.banco.removercolabgrupo({grupo, email});
+
+  return;
 });
 
 // Verifica se tem usuario logado

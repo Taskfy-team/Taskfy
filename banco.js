@@ -300,6 +300,18 @@ async function atualizardadosusr(usr) {
     return result.affectedRows > 0;
 }
 
+async function buscarcolabgrupo(idGrupo) {
+    const conexao = await conectarBD();
+    const sql = "SELECT usuario.email_usuario AS email FROM usuario_equipe  INNER JOIN usuario on usuario.id_usuario = usuario_equipe.fk_usuario WHERE fk_equipe = ?;";
+
+    const [rows] = await conexao.query(sql, [idGrupo]);
+
+    return rows;
+}
+
+async function removercolabgrupo(params) {
+    
+}
 // Query para buscar os usuários, é utilizada na rota '/buscar-usuarios'
 async function buscarUsuariosFiltrados(grupo, nome, dataCriacao) {
     const conexao = await conectarBD();
