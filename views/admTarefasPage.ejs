@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= titulo %></title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/admUsersPage.css" />
+</head>
+
+<body>
+  <main>
+    <h1><%= titulo %></h1>
+
+    <!-- Filtros -->
+    <form class="filtros" method="POST" action="/admin/tarefas/buscar">
+      <label for="nome">Nome da Tarefa:</label>
+      <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
+
+      <label for="data">Data de Criação:</label>
+      <input type="date" id="data" name="data">
+
+      <button type="submit" class="buscar">Buscar</button>
+      <button type="button" class="exportar">Exportar <ion-icon name="download-outline" size="medium"></ion-icon></button>
+    </form>
+
+    <!-- Tabela de Tarefas -->
+    <section class="tabela-tarefas">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome da Tarefa</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Data de Criação</th>
+            <th>Prazo</th>
+            <th>Dono da Tarefa</th>
+            <th>Grupo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (tarefas.length === 0) { %>
+            <tr>
+              <td colspan="7" style="text-align: center;">Nenhuma tarefa encontrada.</td>
+            </tr>
+          <% } else { %>
+            <% tarefas.forEach(tarefa => { %>
+              <tr>
+                <td><%= tarefa.nome_tarefa %></td>
+                <td><%= tarefa.descricao_tarefa %></td>
+                <td><%= tarefa.status_tarefa %></td>
+                <td><%= new Date(tarefa.dataCriacao).toLocaleDateString() %></td>
+                <td><%= tarefa.prazoTarefa ? new Date(tarefa.prazoTarefa).toLocaleDateString() : '-' %></td>
+                <td><%= tarefa.nome_dono || 'Sem dono' %></td>
+                <td><%= tarefa.nome_grupo || 'Sem grupo' %></td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- Ícones -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>initMenu('tarefasAdmin');</script>
+</body>
+
+</html>

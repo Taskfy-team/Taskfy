@@ -2,87 +2,128 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administrar Usuários</title>
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
-  <link rel="stylesheet" href="/stylesheets/admUsersPage.css">
+  <link rel="stylesheet" href="/stylesheets/admUsersPage.css" />
 </head>
 
 <body>
   <main>
     <h1>Administrar Usuários</h1>
-    <form class="filtros" method="POST" action="/buscar-usuarios">
+
+    <!-- Filtros -->
+    <form class="filtros" method="POST" action="/admin/buscar-usuarios">
       <label for="grupo">Grupo:</label>
       <select id="grupo" name="grupo">
         <option value="">Selecionar</option>
-        <option value="grupo1">Grupo 1</option>
-        <option value="grupo2">Grupo 2</option>
+        <% grupos.forEach(grupo => { %>
+          <option value="<%= grupo.nome_equipe %>"><%= grupo.nome_equipe %></option>
+        <% }); %>
       </select>
 
       <label for="nome">Nome:</label>
       <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
 
       <label for="data">Data:</label>
-
       <input type="date" id="data" name="data">
+
       <button type="submit" class="buscar">Buscar</button>
-      <button type="button" class="exportar">Exportar<ion-icon name="download-outline"
-          size="medium"></ion-icon></button>
+      <button type="button" class="exportar">Exportar <ion-icon name="download-outline" size="medium"></ion-icon></button>
       <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
-      <button type="button" class="criar">Criar +</button>
+      <button type="button" class="criar" onclick="location.href='/admin/usuarios/criar'">Criar +</button>
     </form>
 
-    <section class="tabela-usuarios">
-      <table>
-        <thead>
-          <tr>
-            <th>Selecionar</th>
-            <th>Data de Criação</th>
-            <th>Nome do usuário</th>
-            <th>Data Nascimento</th>
-            <th>Telefone</th>
-            <th>Status</th>
-            <th>Admin</th>
-            <th>Email</th>
-            <th>Editar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% usuarios.forEach(usuario=> { %>
+    <!-- Tabela e Formulário de Deleção -->
+    <form id="form-deletar" method="POST" action="/admin/usuarios/deletar">
+      <section class="tabela-usuarios">
+        <table>
+          <thead>
             <tr>
-              <td><input type="checkbox" value="<%= usuario.id_usuario %>" /></td>
-              <td>
-                <%= usuario.dataCriacao.toLocaleDateString() %>
-              </td>
-              <td>
-                <%= usuario.nome_usuario %>
-              </td>
-              <td>
-                <%= usuario.dataNascimento.toLocaleDateString() %>
-              </td>
-              <td>
-                <%= usuario.numeroTelefone %>
-              </td>
-              <td>
-                <%= usuario.status %>
-              </td>
-              <td>
-                <%= usuario.email_usuario %>
-              </td>
-              <td><button><ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon></button></td>
+              <th>Selecionar</th>
+              <th>Data de Criação</th>
+              <th>Nome do usuário</th>
+              <th>Data Nascimento</th>
+              <th>Telefone</th>
+              <th>Status</th>
+              <th>Admin</th>
+              <th>Email</th>
+              <th>Editar</th>
             </tr>
+          </thead>
+          <tbody>
+            <% usuarios.forEach(usuario => { %>
+              <tr>
+                <td><input type="checkbox" name="ids" value="<%= usuario.id_usuario %>" /></td>
+                <td><%= new Date(usuario.dataCriacao).toLocaleDateString() %></td>
+                <td><%= usuario.nome_usuario %></td>
+                <td><%= new Date(usuario.dataNascimento).toLocaleDateString() %></td>
+                <td><%= usuario.numeroTelefone %></td>
+                <td><%= usuario.status %></td>
+                <td><%= usuario.admin ? 'Sim' : 'Não' %></td>
+                <td><%= usuario.email_usuario %></td>
+                <td>
+                  <button type="button">
+                    <ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon>
+                  </button>
+                </td>
+              </tr>
             <% }); %>
-        </tbody>
-      </table>
-    </section>
+          </tbody>
+        </table>
+      </section>
+    </form>
 
   </main>
+
+  <!-- Ícones -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    // Passe o tipo conforme a página, exemplo para admin usuários:
+    initMenu('usuarios'); // para admin usuários
+    // Ou initMenu('gruposAdmin') para admin grupos
+    // Ou initMenu('tarefasAdmin') para admin tarefas
+    // Ou initMenu('grupos') para usuário comum grupos, etc.
+  </script>
+  <script>
+    document.querySelector('.deletar').addEventListener('click', function () {
+      const checkboxes = document.querySelectorAll('#form-deletar input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+        alert('Selecione ao menos um usuário para excluir.');
+        return;
+      }
+
+      if (confirm('Tem certeza que deseja excluir os usuários selecionados?')) {
+        const ids = Array.from(checkboxes).map(cb => cb.value);
+
+        // Envia no formato correto
+        const formData = new URLSearchParams();
+        ids.forEach(id => formData.append('ids', id)); // <- sem colchetes aqui
+
+        fetch('/admin/usuarios/deletar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
+        }).then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            return response.text().then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            });
+          }
+        }).catch(error => {
+          alert('Erro ao excluir usuários: ' + error);
+        });
+      }
+    });
+  </script>
+
 </body>
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-<script>
-  initMenu('admin');
-</script>
+
 </html>
