@@ -66,6 +66,7 @@ router.get('/grupo/:id', async function(req, res) {
   const tarefas = await global.banco.buscarTarefasPorGrupo(idGrupo);
   const [grupo] = await global.banco.buscargrupo(idGrupo);
   const colabs = await global.banco.buscarcolabgrupo(idGrupo);
+
   let donoGrupo = grupo.nome_usuario;
 
   if (grupo.nome_usuario === global.usunome) {
@@ -193,14 +194,16 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
   const id = req.params.idtarefa;
 
   const acessotarefa = await global.banco.pertencetarefa({ id });
-
+  console.log(acessotarefa);
   if (acessotarefa[0].pertence === 0) {
     return res.send("sem acesso");
   }
 
   const [tarefa] = await global.banco.gettaskcoisas({ id });
+  const colabs = await global.banco.buscarcolabtarefa(id);
+  const timeline = await global.banco.buscartimelinemensagens(id);
 
-  res.render('task', { tarefa });
+  res.render('task', { tarefa, colabs, timeline });
 });
 
 router.post('/verificaremail', async function(req, res, next){
@@ -241,6 +244,7 @@ router.post('/removercolabgrupo', async function(req, res, next){
   const email = req.body.email;
 
   const remover = await global.banco.removercolabgrupo({grupo, email});
+  console.log(remover);
   res.sendStatus(200);
 });
 
@@ -275,6 +279,54 @@ router.post('/excluirgrupo', async function(req,res,next){
   res.sendStatus(200);
 });
 
+router.post('/adicionarcolabtarefa', async function(req,res,next) {
+  const tarefa = req.body.tarefa;
+  const email = req.body.email;
+
+  const adicionar = await global.banco.adicionarcolabtarefa({tarefa, email});
+  res.sendStatus(200);
+});
+
+router.post('/removercolabtarefa', async function(req, res, next) {
+  const email = req.body.email;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.removercolabtarefa({tarefa, email});
+  res.sendStatus(200);
+});
+
+router.post('/salvarnometarefa', async function(req, res, next) {
+  const nometarefa = req.body.nometarefa;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.alterarnometarefa({nometarefa, tarefa});
+  res.sendStatus(200);
+});
+
+router.post('/salvardesctarefa', async function(req,res,next) {
+  const desc = req.body.desc;
+  const tarefa = req.body.tarefa;
+
+  const adicionar = await global.banco.alterardesctarefa({desc, tarefa});
+  res.sendStatus(200);
+});
+
+router.post('/enviarmensagemtimeline', async function(req, res, next) {
+  const mensagem = req.body.maintext;
+  const status = req.body.status || 'NA'; 
+  const usuario = global.usucodigo;
+  const tarefa = req.body.tarefa;
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+
+  const dataenvio = `${ano}-${mes}-${dia}`;
+
+  const envio = await global.banco.enviarmsgtimeline({ mensagem, status, usuario, tarefa, dataenvio });
+
+  res.redirect(`/tarefa/${tarefa}`);
+})
 // Verifica se tem usuario logado
 function verificarLogin(res) {
   if (!global.usuemail || global.usuemail == ""){

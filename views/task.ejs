@@ -3,222 +3,400 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Taskfy Tarefa 0000</title>
+    <link rel="icon" href="/images/minilogo.png" type="image/png">
+    <title>Taskfy - <%= tarefa.nome_tarefa %></title>
     <script src="/js/jquery.js"></script>
     <script src="/js/menu.js"></script>
     <link rel="stylesheet" href="/stylesheets/task.css" />
+    <style>
+      .header-title b {
+        padding-left: 15px;
+      }
+      .configuracoesBotao {
+        display: flex;
+        background-color:#cfcece;
+        border-radius:6px;
+        border:1px solid #dcdcdc;
+        color:#000000;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px ;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #ffffff;
+        width: fit-content;
+        margin-right: 15px;
+        justify-content: center;
+        justify-items: center;
+      }
+      .configuracoesBotao:hover {
+        background-color:#adadad;
+        cursor:pointer;
+      }
+      .configuracoesBotao:active {
+        position:relative;
+        top:1px;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5); 
+        align-items: center;
+        justify-content: center;
+        z-index: 9998; 
+      }
+
+      .configuracoes {
+        background-color:   #ffffff;
+        width: 80vw;
+        height: 80vh;
+        box-shadow: -3px 3px 8px 0px #1f1e1e;
+        z-index: 9999;
+        border-radius: 10px;
+        padding: 20px;
+        position: absolute;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .configuracoes h1{
+        border-bottom: solid #000000 5px;
+      }
+
+      .fechar-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff5c5c;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .perf-name {
+          width: 70%;
+          height: 200px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+          align-content: center;
+          border-radius: 15px;
+      }
+      .perf-alt {
+          width: 40%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          font-size: small;
+          color: gray;
+      }
+      .img-edit {
+          width: 30px;
+          height: 30px;
+      }
+      .perf-full-name{
+        width: 50%;
+      }
+      .perf-botoes {
+        width: 70%;
+        height: 30%;
+        display: flex;
+        flex-direction: row;
+        background-color: #DAEDFF;
+        justify-content: space-around;
+        align-items: center;
+        align-content: center;
+        border-radius: 15px;
+      }
+      .configs {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        width: 100%;
+        max-height: 900px;
+      }
+      .editcolabs {
+        width: 70%;
+        height: 250px;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #DAEDFF;
+        border-radius: 15px;
+        overflow-y: auto;
+        flex-direction: row;
+        gap: 6px; 
+        padding: 10px;
+        align-content: flex-start; 
+      }
+      .colabs2 {
+        width: 40%;
+        display: flex;
+        flex-wrap: wrap;
+        border: solid black 1px;
+        border-radius: 15px;
+        overflow-y: auto;
+        flex-direction: row;
+        gap: 6px; 
+        padding: 10px;
+        align-content: flex-start;  
+      }
+      .colab {
+        position: relative;
+        background-color: #95ffa7;
+        border-radius: 15px;
+        padding: 4px 20px 4px 10px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.2;
+        height: auto;
+      }
+
+      .nomecolab {
+        margin: 0;
+        line-height: 1;
+      }
+
+      .fechar-colab {
+        position: absolute;
+        top: 2px;
+        right: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        color: #ff5c5c;
+        font-weight: bolder;
+      }
+
+      .label {
+        display: flex;
+        flex-direction: row;
+        background-color: #DAEDFF;
+        align-content: center;
+        align-items: center;
+        justify-content: space-around;
+        width: fit-content;
+        margin-top: 10px;
+        padding: 2px;
+        border-radius: 15px;
+      }
+
+      .email-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 6px;
+        height: 40px;         
+        background: #fff;
+        overflow-x: auto;      
+        white-space: nowrap;   
+      }
+
+      .email-list {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+      }
+
+      .email-input-wrapper input {
+        border: none;
+        outline: none;
+        flex: 0 0 auto;     
+        min-width: 120px;
+        padding: 4px 8px;
+        font: inherit;
+        white-space: nowrap;
+      }
+
+      .added-email{
+        display:inline-flex;
+        align-items:center;
+        background:#f0f0f0;
+        border:1px solid #4CAF50;
+        border-radius:4px;
+        padding:4px 8px;
+        font-size:.9rem;
+        white-space:nowrap;
+      }
+
+      .excluirgp {
+        width: 30%; 
+        font-size: 15px; 
+        margin-bottom: 5px; 
+        border-radius: 15px; 
+        background-color: #DAEDFF;
+        margin-top: 15px;
+      }
+
+      .excluirgp:hover{
+        background-color: #ff5c5c;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
+    <div class="overlay" id="overlay">
+      <div class="configuracoes">
+        <button class="fechar-btn" onclick="fecharPopup()">×</button>
+        <h1>Configurações Tarefa</h1>
+        <div class="configs">
+          <div style="width: 100%;display: flex; align-items: center; align-content: center;">
+            <div class="perf-name">
+              <div>
+                <h2>Alterar nome</h2>
+              </div>
+              <div class="perf-botoes">
+                <p class="perf-full-name" id="nomeDisplay"><%= tarefa.nome_tarefa %></p>
+                  <div class="perf-alt">
+                      <button type="button" id="btnEditarNome" style="background:none;border:none;cursor:pointer;">
+                          <img class="img-edit" src="/images/edit.png" alt="">
+                          <span id="txtnome">Mudar Nome</span>
+                      </button>
+                      <input type="text" id="novoNome" name="nome" style="display: none;" value="<%= tarefa.nome_tarefa %>">
+                  </div>
+              </div>
+            </div>
+            <div class="perf-name">
+              <div>
+                <h2>Alterar Decrição</h2>
+              </div>
+              <div class="perf-botoes">
+                <p class="perf-full-name" id="senhaDisplay"><%= tarefa.descricao_tarefa %></p>
+                  <div class="perf-alt">
+                      <button type="button" id="btnEditarSenha" style="background:none;border:none;cursor:pointer;">
+                          <img class="img-edit" src="/images/edit.png" alt="">
+                          <span id="txtsenha">Mudar Descrição</span>
+                      </button>
+                      <input type="text" id="novasenha" name="nome" style="display: none;" value="<%= tarefa.descricao_tarefa %>">
+                  </div>
+              </div>
+            </div>
+          </div>
+          <h2>Alterar Colaboradores</h2>
+          <div class="editcolabs" id="editcolabs">
+            <% if (colabs.length > 0) { %>
+              <% colabs.forEach(colab => { %>
+                <% if (colab.email !== global.usuemail) { %>
+                  <div class="colab" id="<%= colab.email %>">
+                    <span class="fechar-colab" onclick="removerColab('<%= colab.email %>')">×</span>
+                    <p class="nomecolab"><%= colab.email %></p>
+                  </div>
+                <% } %>
+              <% }) %>
+            <% } %>
+          </div>
+          <label class="label">
+            <span class="field">Adicionar Membros (Email)</span><br>
+            <div class="email-input-wrapper" id="email-wrapper">
+              <input
+                type="text"
+                id="taskcolabs"
+                placeholder=" Adicionar Membros"
+                autocomplete="off"
+              />
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    
     <div class="group-container">
       <div class="main-task">
         <div class="task-header">
-          <div class="header-title"><b><%= tarefa.nome_tarefa %></b></div>
+          <div class="header-title">
+            <b>Tarefa: <%= tarefa.nome_tarefa %></b>
+            <% if(tarefa.fk_dono_tarefa === global.usucodigo){ %>
+            <a class="configuracoesBotao" onclick="abrirPopup()">Configurações</a>
+            <% } %>
+          </div>
           <div style="display: flex; flex-direction: row">
-            <div style="width: 50%">
+            <div style="padding-left: 15px; width: 50%">
               <p>Status: <%= tarefa.status_tarefa %> </p>
               <p>Criado: <%= tarefa.dataCriacao %></p>
             </div>
-            <div>
+            <div style="width: 10%;">
               <p>Colaboradores:</p>
+            </div>
+            <div class="colabs2" id="colabs2">
+              <% if (colabs.length > 0) { %>
+                <% colabs.forEach(colab => { %>
+                    <div class="colab" id="<%= colab.email %>">
+                      <p class="nomecolab"><%= colab.email %></p>
+                    </div>
+                <% }) %>
+              <% } %>
             </div>
           </div>
         </div>
         <div class="task-messages">
           <div class="task-message">
             <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
+              <b>Criador da Tarefa:</b>
             </div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
+              <%= tarefa.descricao_tarefa %>
             </p>
           </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
+          <% if (timeline.length > 0) { %>
+              <% timeline.forEach(timeline => { %>
+                <div class="task-message">
+                  <div class="message-header">
+                    <%
+                      const data = new Date(timeline.data);
+                      const ano = data.getFullYear();
+                      const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+                      const dia = data.getDate().toString().padStart(2, '0');
+                    %>
+                    <b><%= timeline.nome_usuario %></b> <span><%= `${ano}/${mes}/${dia}` %></span>
+                  </div>
+                  <p>
+                    <%= timeline.mensagem %>
+                  </p>
+                </div>
+              <% }) %>
+          <% } %>
         </div>
-        <form action="" method="" class="send-message">
-          <div>
-            <input type="text" class="main-text" name="main-text" />
+        
+        <form action="/enviarmensagemtimeline" method="POST" class="send-message">
+          <% if(tarefa.status_tarefa !== "Fechada") { %>
+          <input type="hidden" name="tarefa" value="<%= tarefa.id_tarefa %>">
+          <b>Enviar Mensagem</b>
+          <div style="width: 70%;">
+            <textarea type="text" class="main-text" name="maintext"></textarea>
           </div>
-          <div>
-            <input type="file" name="task-mes-anexo" />
-            <select name="task-init-stat">
-              <option value="Aberta">Aberta</option>
-              <option value="Em andamento">Em andamento</option>
-              <option value="Fechada">Fechada</option>
-            </select>
-            <input type="button" value="Recomeçar Formulario" id="reset-form" />
-            <input type="submit" />
+          <div style="display: flex; justify-content: center; align-items: center; width: 30%; flex-direction: column;">
+            <% if(tarefa.fk_dono_tarefa === global.usucodigo){ %>
+            <div>
+              <span>Status: </span>
+              <select name="status">
+                <option value="Aberta" <%= tarefa.status_tarefa === "Aberta" ? "selected" : "" %> >Aberta</option>
+                <option value="Em andamento" <%= tarefa.status_tarefa === "Em andamen" ? "selected" : "" %>>Em andamento</option>
+                <option value="Fechada" <%= tarefa.status_tarefa === "Fechada" ? "selected" : "" %>>Fechada</option>
+              </select>
+            </div>
+            <% } %>
+            <br>
+            <input type="submit" value="Enviar" style="cursor: pointer;"/>
           </div>
+          <% } %>
         </form>
-      </div>
-      <div class="side-chat">
-        <div class="chat-title">
-          <b>Chat</b>
-        </div>
-        <div class="chat-messages">
-          <div class="chat-message">
-            <div style="width: 95%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div><div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-          <div class="chat-message">
-            <div style="width: 98%">
-              <b>Fulano: </b>Lorem, ipsum dolor sit amet consectetur adipisicing
-              elit. Soluta ab, ipsam repellat et aliquam magnam modi temporibus
-              odit illum numquam suscipit deserunt? Pariatur quam provident
-              aliquid, sequi corporis nihil consectetur. - 14-02-2025 19:00
-            </div>
-          </div>
-        </div>
-        <form action="" method="" class="chat-send-messages">
-          <input type="text" />
-          <button type="submit">-></button>
-        </form>
+        
       </div>
     </div>
   </body>
@@ -226,5 +404,176 @@
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <script>
     initMenu("tarefas");
+    function fecharPopup() {
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    function abrirPopup() {
+      document.getElementById('overlay').style.display = 'flex';
+    }
+    let nome = 1;
+      let senha = 1;
+
+      document.getElementById('btnEditarNome').addEventListener('click', function () {
+        if(nome === 1){
+          document.getElementById('novoNome').style.display = 'inline-block';
+          document.getElementById('nomeDisplay').style.display = 'none';
+          document.getElementById('txtnome').textContent = "Salvar Nome";
+          nome = 2;
+        }else{
+          let novonome = document.getElementById("novoNome").value;
+          salvarnomegrupo(novonome);
+          document.getElementById('nomeDisplay').textContent = novonome;
+          document.getElementById('novoNome').style.display = 'none';
+          document.getElementById('nomeDisplay').style.display = 'inline-block';
+          document.getElementById('txtnome').textContent = "Mudar Nome";
+          nome = 1;
+        }
+        
+      });
+
+      document.getElementById('btnEditarSenha').addEventListener('click', function () {
+        if(senha === 1){
+          document.getElementById('novasenha').style.display = 'inline-block';
+          document.getElementById('senhaDisplay').style.display = 'none';
+          document.getElementById('txtsenha').textContent = "Salvar Descrição";
+          senha = 2;
+        }else{
+          let novasenha = document.getElementById("novasenha").value;
+          salvardescgrupo(novasenha);
+          document.getElementById('senhaDisplay').textContent = novasenha;
+          document.getElementById('novasenha').style.display = 'none';
+          document.getElementById('senhaDisplay').style.display = 'inline-block';
+          document.getElementById('txtsenha').textContent = "Mudar Descrição";
+          senha = 1;
+        }
+        
+      });
+
+    const addedEmails = ['<%= global.usuemail %>'];
+
+    const elementos = document.querySelectorAll('.nomecolab');
+    elementos.forEach(el => {
+      addedEmails.push(el.textContent.trim());
+    });
+
+    console.log(addedEmails);
+
+    function isValidEmail(email) {
+      const valid = /\S+@\S+\.\S+/.test(email);
+      return valid;
+    }
+
+    async function verificarEmailExistente(email) {
+      try {
+        const res = await fetch(`/verificaremail`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
+        const json = await res.json();
+        console.log("📬 Resposta do servidor:", json);
+        return json.exists;
+      } catch (err) {
+        console.error("Erro ao verificar e-mail:", err);
+        return false;
+      }
+    }
+
+    function renderEmail(email) {
+    $('#editcolabs').append(`
+      <div class="colab" id="${email}">
+        <span class="fechar-colab" onclick="removerColab('${email}')">×</span>
+        <p class="nomecolab">${email}</p>
+      </div>
+    `);
+    $('#colabs2').append(`
+      <div class="colab" id="${email}">
+        <p class="nomecolab">${email}</p>
+      </div>
+    `);
+  }
+
+    
+    $('#taskcolabs').on('keydown', async function(e) {
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+
+        const email = this.value.trim();
+        console.log("📩 E-mail digitado:", email);
+
+        if (!isValidEmail(email)) {
+          alert("Email inválido!");
+          return;
+        }
+
+        if (addedEmails.includes(email)) {
+          alert("Este e-mail já foi adicionado.");
+          this.value = "";
+          return;
+        }
+
+        const existe = await verificarEmailExistente(email);
+
+        if (existe) {
+          addedEmails.push(email);
+          renderEmail(email);
+          const res = await fetch(`/adicionarcolabtarefa`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, tarefa: "<%= tarefa.id_tarefa %>" })
+        });
+          this.value = "";
+          console.log(" E-mail adicionado:", email);
+        } else {
+          alert("Email não encontrado.");
+          console.log(" E-mail não existe no sistema:", email);
+        }
+      }
+    });
+
+    async function removerColab(email) {
+      console.log("Removendo " + email);
+      const res = await fetch(`/removercolabtarefa`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, tarefa: "<%= tarefa.id_tarefa %>" })
+        });
+
+      document.querySelectorAll(`[id="${email}"]`).forEach(el => el.remove());
+
+      const index = addedEmails.indexOf(email);
+
+      if (index !== -1) {
+        addedEmails.splice(index, 1);
+      }
+      console.log(addedEmails);
+    }
+
+    async function salvarnomegrupo(nometarefa) {
+        const res = await fetch(`/salvarnometarefa`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ nometarefa, tarefa: "<%= tarefa.id_tarefa  %>" })
+        });
+    }
+
+    async function salvardescgrupo(desc) {
+        const res = await fetch(`/salvardesctarefa`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ desc, tarefa: "<%= tarefa.id_tarefa %>" })
+        });
+    }
   </script>
 </html>
