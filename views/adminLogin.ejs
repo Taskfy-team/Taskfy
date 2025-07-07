@@ -2,18 +2,19 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Administrador - Taskfy</title>
-  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="icon" href="/images/minilogo.png" type="image/png">
+  <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login do Administrador</h2>
-    <form method="POST" action="/admin/login">
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="senha" placeholder="Senha" required>
-      <button type="submit">Entrar</button>
-    </form>
-    <a href="/">Voltar ao login de usuário</a>
-  </div>
+  <h2>Area do Administrador</h2>
+  <form action="/admin/login" method="POST">
+    <img src="/images/logo.png" width="45%" style="margin-top: 4vh;">
+    <input type="email" name="email" placeholder="   Email" required>
+    <input type="password" name="senha" placeholder="   Senha" required>
+    <button type="submit">Entrar</button>
+    <a href="/"><p>Voltar ao login de usuário</p></a>
+  </form>
 </body>
 </html>

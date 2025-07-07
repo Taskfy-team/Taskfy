@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Administrar Usuários</title>
   <script src="/js/jquery.js"></script>
   <script src="/js/menu.js"></script>
@@ -19,9 +19,11 @@
       <label for="grupo">Grupo:</label>
       <select id="grupo" name="grupo">
         <option value="">Selecionar</option>
-        <% grupos.forEach(grupo => { %>
-          <option value="<%= grupo.nome_equipe %>"><%= grupo.nome_equipe %></option>
-        <% }); %>
+        <% grupos.forEach(grupo=> { %>
+          <option value="<%= grupo.nome_equipe %>">
+            <%= grupo.nome_equipe %>
+          </option>
+          <% }); %>
       </select>
 
       <label for="nome">Nome:</label>
@@ -31,7 +33,8 @@
       <input type="date" id="data" name="data">
 
       <button type="submit" class="buscar">Buscar</button>
-      <button type="button" class="exportar">Exportar <ion-icon name="download-outline" size="medium"></ion-icon></button>
+      <button type="button" class="exportar">Exportar <ion-icon name="download-outline"
+          size="medium"></ion-icon></button>
       <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
       <button type="button" class="criar" onclick="location.href='/admin/usuarios/criar'">Criar +</button>
     </form>
@@ -54,28 +57,64 @@
             </tr>
           </thead>
           <tbody>
-            <% usuarios.forEach(usuario => { %>
+            <% usuarios.forEach(usuario=> { %>
               <tr>
                 <td><input type="checkbox" name="ids" value="<%= usuario.id_usuario %>" /></td>
-                <td><%= new Date(usuario.dataCriacao).toLocaleDateString() %></td>
-                <td><%= usuario.nome_usuario %></td>
-                <td><%= new Date(usuario.dataNascimento).toLocaleDateString() %></td>
-                <td><%= usuario.numeroTelefone %></td>
-                <td><%= usuario.status %></td>
-                <td><%= usuario.admin ? 'Sim' : 'Não' %></td>
-                <td><%= usuario.email_usuario %></td>
+                <td>
+                  <%= new Date(usuario.dataCriacao).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= usuario.nome_usuario %>
+                </td>
+                <td>
+                  <%= new Date(usuario.dataNascimento).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= usuario.numeroTelefone %>
+                </td>
+                <td>
+                  <%= usuario.status %>
+                </td>
+                <td>
+                  <%= usuario.admin ? 'Sim' : 'Não' %>
+                </td>
+                <td>
+                  <%= usuario.email_usuario %>
+                </td>
                 <td>
                   <button type="button">
                     <ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon>
                   </button>
                 </td>
               </tr>
-            <% }); %>
+              <% }); %>
           </tbody>
         </table>
       </section>
     </form>
+    <div id="popup-edicao" class="popup-overlay" style="display: none;">
+      <div class="popup-content">
+        <h3>Editar Usuário</h3>
+        <form id="form-edicao">
+          <input type="hidden" id="edit-id">
 
+          <label for="edit-nome">Nome:</label>
+          <input type="text" id="edit-nome" name="nome" required>
+
+          <label for="edit-senha">Nova Senha:</label>
+          <input type="password" id="edit-senha" name="senha">
+
+          <label for="edit-status">Status:</label>
+          <select id="edit-status" name="status">
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+
+          <button type="submit">Salvar</button>
+          <button type="button" onclick="fecharPopup()">Cancelar</button>
+        </form>
+      </div>
+    </div>
   </main>
 
   <!-- Ícones -->
@@ -123,7 +162,49 @@
       }
     });
   </script>
+  <script>
+    const popup = document.getElementById('popup-edicao');
+    const form = document.getElementById('form-edicao');
 
+    document.querySelectorAll('.editar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('edit-id').value = btn.dataset.id;
+        document.getElementById('edit-nome').value = btn.dataset.nome;
+        document.getElementById('edit-status').value = btn.dataset.status;
+        document.getElementById('edit-senha').value = ''; // limpa campo
+        popup.style.display = 'flex';
+      });
+    });
+
+    function fecharPopup() {
+      popup.style.display = 'none';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const dados = {
+        id: form.edit - id.value,
+        nome: form.edit - nome.value,
+        senha: form.edit - senha.value,
+        status: form.edit - status.value
+      };
+
+      const resposta = await fetch('/admin/usuarios/editar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+      });
+
+      if (resposta.ok) {
+        alert('Usuário atualizado com sucesso!');
+        location.reload();
+      } else {
+        alert('Erro ao atualizar usuário.');
+      }
+    });
+  </script>
 </body>
-
 </html>
