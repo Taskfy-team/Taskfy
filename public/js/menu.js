@@ -58,7 +58,7 @@ var styles = `
 `;
 
 function menuNavbar(tipo) {
-  const isAdmin = tipo === 'usuarios' || tipo === 'gruposAdmin' || tipo === 'tarefasAdmin';
+  const isAdmin = tipo === 'usuarios' || tipo === 'dashboards' || tipo === 'tarefasAdmin';
 
   if (isAdmin) {
     return `
@@ -70,8 +70,8 @@ function menuNavbar(tipo) {
           <li class="menu-item ${tipo === 'usuarios' ? 'active' : ''}">
             <a href="/admin/usuarios"><ion-icon name="people-outline"></ion-icon> Usuários</a>
           </li>
-          <li class="menu-item ${tipo === 'gruposAdmin' ? 'active' : ''}">
-            <a href="/admin/grupos"><ion-icon name="people-circle-outline"></ion-icon> Grupos</a>
+          <li class="menu-item ${tipo === 'dashboards' ? 'active' : ''}">
+            <a href="/admin/dashboards"><ion-icon name="analytics-outline"></ion-icon> Dashboards</a>
           </li>
           <li class="menu-item ${tipo === 'tarefasAdmin' ? 'active' : ''}">
             <a href="/admin/tarefas"><ion-icon name="list-outline"></ion-icon> Tarefas</a>
@@ -83,6 +83,7 @@ function menuNavbar(tipo) {
       </div>
     `;
   } else {
+    // menu de usuário comum permanece o mesmo
     return `
       <div class="sidebar">
         <div class="sidebar-header">
@@ -109,6 +110,7 @@ function menuNavbar(tipo) {
     `;
   }
 }
+
 
 function initMenu(tipo) {
   if (!document.getElementById('menu-styles')) {

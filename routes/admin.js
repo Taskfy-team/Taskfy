@@ -93,7 +93,7 @@ router.get('/tarefas', async (req, res) => {
   }
 
   try {
-    const tarefas = await buscarTodasTarefas();
+    const tarefas = await global.banco.buscarTodasTarefas();
     res.render('admTarefasPage', { titulo: 'Administração de Tarefas', tarefas });
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
@@ -135,6 +135,21 @@ router.post('/tarefas/buscar', async (req, res) => {
   }
 });
 
+router.get('/dashboards', async (req, res) => {
+    if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+  try {
+    const resultado = await banco.obterQtdMembrosPorEquipe();
+    res.render('admDashboardsPage', {
+      tipo: 'dashboards',
+      dadosGrafico: resultado
+    });
+  } catch (err) {
+    console.error('Erro ao carregar dados do dashboard:', err);
+    res.status(500).send('Erro ao carregar dashboard');
+  }
+});
 
 
 
