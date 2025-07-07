@@ -60,11 +60,12 @@ async function buscarTarefasPorGrupo(idGrupo) {
     const sql = `
         SELECT * 
         FROM tarefas 
-        INNER JOIN usuario ON tarefas.fk_dono_tarefa = usuario.id_usuario 
+        INNER JOIN usuario ON tarefas.fk_dono_tarefa = usuario.id_usuario
+        INNER JOIN usuario_tarefa ON usuario_tarefa.fk_tarefa = tarefas.id_tarefa 
         INNER JOIN equipes on equipes.id_equipe = tarefas.fk_equipe
-        WHERE tarefas.fk_equipe = ?;
+        WHERE tarefas.fk_equipe = ? AND usuario_tarefa.fk_usuario = ?;
     `;
-    const [tarefas] = await conexao.query(sql, [idGrupo]);
+    const [tarefas] = await conexao.query(sql, [idGrupo, global.usucodigo]);
     return tarefas;
 }
 
@@ -243,7 +244,6 @@ async function createtarefa(tarefa) {
         return false;
     }
 }
-
 
 async function cadastrarusu(usuario) {
     const conexao = await conectarBD();
@@ -597,6 +597,41 @@ async function alterardesctarefa(params) {
     return rows;
 }
 
+async function buscartimelinemensagens(idTarefa) {
+    const conexao = await conectarBD();
+
+    const sql = `
+        SELECT usuario.nome_usuario as nome_usuario, timeline_tarefa.data_timline as data, timeline_tarefa.mensagem_timeline as mensagem 
+        FROM timeline_tarefa
+        INNER JOIN usuario ON usuario.id_usuario = timeline_tarefa.fk_usuario
+        WHERE fk_tarefa = ?
+        ORDER BY data_timline ASC;
+    `;
+    
+    const [rows] = await conexao.query(sql, [idTarefa]);
+
+    return rows;
+}
+
+async function enviarmsgtimeline(params) {
+    const conexao = await conectarBD();
+    if(params.status !== "NA"){
+        const sqlstualstatus = `select tarefas.status_tarefa as status FROM tarefas WHERE tarefas.id_tarefa = ?`;
+        const [atualstatus] = await conexao.query(sqlstualstatus, [params.tarefa]);
+        console.log(atualstatus[0].status + " : " + params.status);
+        if(params.status !== atualstatus[0].status){
+            params.mensagem = params.status + " - " + params.mensagem;
+        }
+        const sqlstatus = `UPDATE tarefas SET tarefas.status_tarefa = ? WHERE tarefas.id_tarefa = ?`;
+        const [rowstatus] = await conexao.query(sqlstatus, [params.status, params.tarefa]);
+    }
+    const sql = `INSERT INTO timeline_tarefa(mensagem_timeline, data_timline,fk_tarefa,fk_usuario)
+                 VALUES (?,?,?,?)`;
+    const [rows] = await conexao.query(sql, [params.mensagem, params.dataenvio,params.tarefa,params.usuario]);
+    
+    return rows;
+}
+
 module.exports = {
     conectarBD,
     buscarUsuario,
@@ -632,5 +667,7 @@ module.exports = {
     adicionarcolabtarefa,
     removercolabtarefa,
     alterarnometarefa,
-    alterardesctarefa
+    alterardesctarefa,
+    buscartimelinemensagens,
+    enviarmsgtimeline
 };

@@ -13,6 +13,7 @@
         padding-left: 15px;
       }
       .configuracoesBotao {
+        display: flex;
         background-color:#cfcece;
         border-radius:6px;
         border:1px solid #dcdcdc;
@@ -24,6 +25,8 @@
         text-shadow:0px 1px 0px #ffffff;
         width: fit-content;
         margin-right: 15px;
+        justify-content: center;
+        justify-items: center;
       }
       .configuracoesBotao:hover {
         background-color:#adadad;
@@ -344,123 +347,56 @@
         <div class="task-messages">
           <div class="task-message">
             <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
+              <b>Criador da Tarefa:</b>
             </div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
+              <%= tarefa.descricao_tarefa %>
             </p>
           </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
-          <div class="task-message">
-            <div class="message-header">
-              <b>FULANO</b> <span>postou 14-02-2025</span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Assumenda, enim iste sequi quibusdam porro cupiditate veniam
-              fugiat dolor nisi expedita corrupti animi voluptates incidunt a
-              inventore delectus voluptas, aspernatur odit. Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Dolores at quas aliquid
-              beatae repudiandae ex totam adipisci praesentium officiis dolore
-              voluptatem, accusamus dolorem ducimus aliquam distinctio saepe,
-              atque maxime? Hic?
-            </p>
-          </div>
+          <% if (timeline.length > 0) { %>
+              <% timeline.forEach(timeline => { %>
+                <div class="task-message">
+                  <div class="message-header">
+                    <%
+                      const data = new Date(timeline.data);
+                      const ano = data.getFullYear();
+                      const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+                      const dia = data.getDate().toString().padStart(2, '0');
+                    %>
+                    <b><%= timeline.nome_usuario %></b> <span><%= `${ano}/${mes}/${dia}` %></span>
+                  </div>
+                  <p>
+                    <%= timeline.mensagem %>
+                  </p>
+                </div>
+              <% }) %>
+          <% } %>
         </div>
-        <form action="" method="" class="send-message">
-          <div>
-            <input type="text" class="main-text" name="main-text" />
+        
+        <form action="/enviarmensagemtimeline" method="POST" class="send-message">
+          <% if(tarefa.status_tarefa !== "Fechada") { %>
+          <input type="hidden" name="tarefa" value="<%= tarefa.id_tarefa %>">
+          <b>Enviar Mensagem</b>
+          <div style="width: 70%;">
+            <textarea type="text" class="main-text" name="maintext"></textarea>
           </div>
-          <div>
-            <select name="task-init-stat">
-              <option value="Aberta">Ativa</option>
-              <option value="Em andamento">Em andamento</option>
-              <option value="Fechada">Fechada</option>
-            </select>
-            <input type="submit" />
+          <div style="display: flex; justify-content: center; align-items: center; width: 30%; flex-direction: column;">
+            <% if(tarefa.fk_dono_tarefa === global.usucodigo){ %>
+            <div>
+              <span>Status: </span>
+              <select name="status">
+                <option value="Aberta" <%= tarefa.status_tarefa === "Aberta" ? "selected" : "" %> >Aberta</option>
+                <option value="Em andamento" <%= tarefa.status_tarefa === "Em andamen" ? "selected" : "" %>>Em andamento</option>
+                <option value="Fechada" <%= tarefa.status_tarefa === "Fechada" ? "selected" : "" %>>Fechada</option>
+              </select>
+            </div>
+            <% } %>
+            <br>
+            <input type="submit" value="Enviar" style="cursor: pointer;"/>
           </div>
+          <% } %>
         </form>
+        
       </div>
     </div>
   </body>

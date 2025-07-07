@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: row;
     width: 90%;
-    height: 100%;
+    height: 95%;
     margin: 1%;
     justify-content: space-around;
 }
@@ -78,7 +78,7 @@
 }
 
 .message-header {
-    width: 100%;
+    width: 98.99%;
     height: 30%;
     display: flex;
     justify-content: flex-start;
@@ -86,6 +86,7 @@
     background-color: #879DFF;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    padding-left: 15px;
 }
 
 .message-header span {
@@ -98,11 +99,16 @@
     border-radius: 15px;
     background-color: #D5EBFF;
     border: 1px solid #1F94FF; 
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .main-text {
-    height: 100%;
-    width: 90%;
+    height: 90%;
+    width: 100%;
 }
 
 .side-chat {

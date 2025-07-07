@@ -201,7 +201,9 @@ router.get('/tarefa/:idtarefa', async function(req, res, next){
 
   const [tarefa] = await global.banco.gettaskcoisas({ id });
   const colabs = await global.banco.buscarcolabtarefa(id);
-  res.render('task', { tarefa, colabs });
+  const timeline = await global.banco.buscartimelinemensagens(id);
+
+  res.render('task', { tarefa, colabs, timeline });
 });
 
 router.post('/verificaremail', async function(req, res, next){
@@ -309,6 +311,22 @@ router.post('/salvardesctarefa', async function(req,res,next) {
   res.sendStatus(200);
 });
 
+router.post('/enviarmensagemtimeline', async function(req, res, next) {
+  const mensagem = req.body.maintext;
+  const status = req.body.status || 'NA'; 
+  const usuario = global.usucodigo;
+  const tarefa = req.body.tarefa;
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+
+  const dataenvio = `${ano}-${mes}-${dia}`;
+
+  const envio = await global.banco.enviarmsgtimeline({ mensagem, status, usuario, tarefa, dataenvio });
+
+  res.redirect(`/tarefa/${tarefa}`);
+})
 // Verifica se tem usuario logado
 function verificarLogin(res) {
   if (!global.usuemail || global.usuemail == ""){
