@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08/07/2025 às 02:31
+-- Tempo de geração: 08/07/2025 às 03:45
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -205,7 +205,6 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`id_usuario`, `nome_usuario`, `email_usuario`, `senha_usuario`, `dataNascimento`, `dataCriacao`, `numeroTelefone`, `status`) VALUES
 (1, 'adolfo müller', 'minecraftalemao@ww2.bol.com', '123', '1897-03-28', '2023-10-14', '', ''),
 (6, 'Gabriel', 'gabriel@email.com', '123', '2008-01-21', '2024-01-01', '988335544', 'ativo'),
-(7, 'Gabriel Silva', 'gabriel@email.com', '123', '2000-05-21', '2024-01-01', '988335544', 'ativo'),
 (8, 'Ana Souza', 'ana@email.com', '123', '1998-03-15', '2024-01-02', '977665544', 'ativo'),
 (9, 'Carlos Pereira', 'carlos@email.com', '123', '1995-11-10', '2024-01-03', '966554433', 'ativo'),
 (10, 'Mariana Lima', 'mariana@email.com', '123', '2002-08-22', '2024-01-04', '955443322', 'inativo'),
@@ -214,7 +213,8 @@ INSERT INTO `usuario` (`id_usuario`, `nome_usuario`, `email_usuario`, `senha_usu
 (13, 'Julia Ribeiro', 'julia@email.com', '123', '1990-10-01', '2025-01-10', '992345678', 'ativo'),
 (14, 'Paulo Henrique', 'paulo@email.com', '123', '1997-08-23', '2025-01-12', '993456789', 'ativo'),
 (15, 'Rafael Tavares', 'rafael@email.com', '123', '1991-07-19', '2025-02-01', '994567890', 'ativo'),
-(16, 'Beatriz Costa', 'beatriz@email.com', '123', '1996-12-03', '2025-02-01', '995678901', 'ativo');
+(16, 'Beatriz Costa', 'beatriz@email.com', '123', '1996-12-03', '2025-02-01', '995678901', 'ativo'),
+(17, 'Lucas Felipe', 'lucass@gmail.com', '123', NULL, NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -239,7 +239,6 @@ INSERT INTO `usuario_equipe` (`id_usr_equipe`, `fk_equipe`, `fk_usuario`) VALUES
 (12, 4, 6),
 (21, 1, 1),
 (25, 5, 6),
-(26, 5, 7),
 (27, 5, 8),
 (28, 6, 9),
 (29, 6, 10),
@@ -494,7 +493,7 @@ ALTER TABLE `timeline_tarefa`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `usuario_equipe`
