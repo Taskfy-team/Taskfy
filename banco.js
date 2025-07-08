@@ -644,8 +644,51 @@ async function obterQtdMembrosPorEquipe() {
   return resultado;
 }
 
+// banco.js
+
+async function atualizarUsuario(conexao, id, nome, senha, status) {
+  const updates = [];
+  const valores = [];
+
+  if (nome) {
+    updates.push("nome_usuario = ?");
+    valores.push(nome);
+  }
+
+  if (senha) {
+    updates.push("senha = ?");
+    valores.push(senha); // Você pode usar hash aqui se necessário
+  }
+
+  if (status) {
+    updates.push("status = ?");
+    valores.push(status);
+  }
+
+  if (updates.length === 0) return; // Nada para atualizar
+
+  valores.push(id);
+
+  const sql = `UPDATE usuario SET ${updates.join(', ')} WHERE id_usuario = ?`;
+  await conexao.query(sql, valores);
+}
+
+async function inserirNovoUsuarioOuAdmin(nome, email, senha, tipo) {
+  const conexao = await conectarBD();
+
+  if (tipo === 'admin') {
+    const sql = 'INSERT INTO admin (nome_admin, email_admin, senha_admin) VALUES (?, ?, ?)';
+    await conexao.query(sql, [nome, email, senha]);
+  } else {
+    const sql = 'INSERT INTO usuario (nome_usuario, email_usuario, senha_usuario, status) VALUES (?, ?, ?, "ativo")';
+    await conexao.query(sql, [nome, email, senha]);
+  }
+}
+
 
 module.exports = {
+    inserirNovoUsuarioOuAdmin,
+    atualizarUsuario,
     obterQtdMembrosPorEquipe,
     conectarBD,
     buscarUsuario,

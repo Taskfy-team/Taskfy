@@ -36,7 +36,9 @@
       <button type="button" class="exportar">Exportar <ion-icon name="download-outline"
           size="medium"></ion-icon></button>
       <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
-      <button type="button" class="criar" onclick="location.href='/admin/usuarios/criar'">Criar +</button>
+      <button type="button" class="criar" onclick="abrirCriacao()">Criar +</button>
+
+
     </form>
 
     <!-- Tabela e Formulário de Deleção -->
@@ -82,7 +84,7 @@
                   <%= usuario.email_usuario %>
                 </td>
                 <td>
-                  <button type="button">
+                  <button type="button" onclick='openEditPopup(<%- JSON.stringify(usuario) %>)'>
                     <ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon>
                   </button>
                 </td>
@@ -92,29 +94,63 @@
         </table>
       </section>
     </form>
-    <div id="popup-edicao" class="popup-overlay" style="display: none;">
+    <div id="editPopup" class="popup-overlay" style="display: none;">
       <div class="popup-content">
         <h3>Editar Usuário</h3>
-        <form id="form-edicao">
+        <form id="editForm">
           <input type="hidden" id="edit-id">
 
           <label for="edit-nome">Nome:</label>
-          <input type="text" id="edit-nome" name="nome" required>
+          <input type="text" id="edit-nome" disabled>
+          <button type="button" onclick="enableEdit('edit-nome')">Editar Nome</button>
 
-          <label for="edit-senha">Nova Senha:</label>
-          <input type="password" id="edit-senha" name="senha">
+          <label for="edit-senha">Senha:</label>
+          <input type="password" id="edit-senha" disabled>
+          <button type="button" onclick="enableEdit('edit-senha')">Editar Senha</button>
 
           <label for="edit-status">Status:</label>
-          <select id="edit-status" name="status">
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
+          <select id="edit-status">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
           </select>
 
-          <button type="submit">Salvar</button>
-          <button type="button" onclick="fecharPopup()">Cancelar</button>
+          <div class="popup-buttons">
+            <button onclick="fecharPopup()">
+              <ion-icon name="close-circle-outline"></ion-icon> Cancelar
+            </button>
+            <button onclick="confirmarEdicao()">
+              <ion-icon name="checkmark-circle-outline"></ion-icon> Confirmar
+            </button>
+          </div>
+
         </form>
       </div>
     </div>
+    <div id="popup-criar" class="popup-overlay" style="display: none;">
+      <div class="popup-card">
+        <h3>Criar Novo Usuário</h3>
+        <form id="form-criar" onsubmit="enviarCriacao(event)">
+          <input type="text" name="nome" placeholder="Nome" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="senha" placeholder="Senha" required>
+
+          <select name="admin">
+            <option value="0">Usuário Comum</option>
+            <option value="1">Administrador</option>
+          </select>
+
+          <div class="popup-buttons">
+            <button type="button" onclick="fecharCriacao()">
+              <ion-icon name="close-circle-outline"></ion-icon> Cancelar
+            </button>
+            <button type="submit">
+              <ion-icon name="add-circle-outline"></ion-icon> Criar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 
   <!-- Ícones -->
@@ -163,48 +199,94 @@
     });
   </script>
   <script>
-    const popup = document.getElementById('popup-edicao');
-    const form = document.getElementById('form-edicao');
-
-    document.querySelectorAll('.editar-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('edit-id').value = btn.dataset.id;
-        document.getElementById('edit-nome').value = btn.dataset.nome;
-        document.getElementById('edit-status').value = btn.dataset.status;
-        document.getElementById('edit-senha').value = ''; // limpa campo
-        popup.style.display = 'flex';
-      });
-    });
-
-    function fecharPopup() {
-      popup.style.display = 'none';
+    function enableEdit(id) {
+      document.getElementById(id).disabled = false;
+      document.getElementById(id).focus();
     }
 
-    form.addEventListener('submit', async (e) => {
+    function openEditPopup(user) {
+      document.getElementById('edit-id').value = user.id_usuario;
+      document.getElementById('edit-nome').value = user.nome_usuario;
+      document.getElementById('edit-nome').disabled = true;
+      document.getElementById('edit-senha').value = '';
+      document.getElementById('edit-senha').disabled = true;
+      document.getElementById('edit-status').value = user.status;
+      document.getElementById('editPopup').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('editPopup').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const dados = {
-        id: form.edit - id.value,
-        nome: form.edit - nome.value,
-        senha: form.edit - senha.value,
-        status: form.edit - status.value
-      };
+      const id = document.getElementById('edit-id').value;
+      const nomeInput = document.getElementById('edit-nome');
+      const senhaInput = document.getElementById('edit-senha');
+      const status = document.getElementById('edit-status').value;
 
-      const resposta = await fetch('/admin/usuarios/editar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dados)
-      });
+      const dados = { id };
 
-      if (resposta.ok) {
-        alert('Usuário atualizado com sucesso!');
-        location.reload();
-      } else {
-        alert('Erro ao atualizar usuário.');
+      if (!nomeInput.disabled) dados.nome = nomeInput.value;
+      if (!senhaInput.disabled && senhaInput.value) dados.senha = senhaInput.value;
+      if (status) dados.status = status;
+
+      try {
+        const resposta = await fetch('/admin/usuarios/editar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        if (resposta.ok) {
+          location.reload();
+        } else {
+          alert('Erro ao atualizar usuário');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro na requisição');
       }
     });
   </script>
+
+ <script>
+  function abrirCriacao() {
+    document.getElementById('popup-criar').style.display = 'flex';
+  }
+
+  function fecharCriacao() {
+    document.getElementById('popup-criar').style.display = 'none';
+    document.getElementById('form-criar').reset();
+  }
+
+  async function enviarCriacao(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('form-criar');
+    const formData = new FormData(form);
+    const dados = {
+      nome: formData.get('nome'),
+      email: formData.get('email'),
+      senha: formData.get('senha'),
+      admin: formData.get('admin')
+    };
+
+    const res = await fetch('/admin/usuarios/criar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+
+    if (res.ok) {
+      fecharCriacao();
+      location.reload();
+    } else {
+      alert('Erro ao criar usuário.');
+    }
+  }
+</script>
 </body>
+
 </html>

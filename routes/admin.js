@@ -151,6 +151,38 @@ router.get('/dashboards', async (req, res) => {
   }
 });
 
+router.post('/usuarios/editar', async (req, res) => {
+  if (!global.adminlogado) return res.status(403).send('Não autorizado');
+
+  const { id, nome, senha, status } = req.body;
+
+  if (!id) return res.status(400).send('ID do usuário é obrigatório');
+
+  try {
+    const conexao = await global.banco.conectarBD();
+    await global.banco.atualizarUsuario(conexao, id, nome, senha, status);
+    res.sendStatus(200);
+  } catch (erro) {
+    console.error('Erro ao editar usuário:', erro);
+    res.sendStatus(500);
+  }
+});
+
+router.post('/usuarios/criar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+  const { nome, email, senha, admin } = req.body;
+  const tipo = admin === '1' ? 'admin' : 'usuario';
+
+  try {
+    await banco.inserirNovoUsuarioOuAdmin(nome, email, senha, tipo);
+    res.status(200).json({ sucesso: true });
+  } catch (erro) {
+    console.error('Erro ao inserir usuário/admin:', erro);
+    res.status(500).json({ erro: 'Erro ao inserir usuário/admin' });
+  }
+});
 
 
 module.exports = router;
