@@ -38,7 +38,7 @@ npm install
 npm start
 ```
 
-Acesse no navegador: 
+Acesse no navegador: <br>
 Rota para acesso de usuário: [http://localhost:3000](http://localhost:3000)
 <br>
 Rota para acesso de administrador: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
