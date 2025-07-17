@@ -2,7 +2,7 @@
 
 Taskfy é uma aplicação web para gerenciamento de tarefas desenvolvida com Node.js, Express e MySQL.
 
-
+<br>
 
 
 ## 🚀 Pré-requisitos
@@ -10,7 +10,7 @@ Taskfy é uma aplicação web para gerenciamento de tarefas desenvolvida com Nod
 - [Node.js](https://nodejs.org/) instalado
 - Servidor MySQL ativo
 
----
+<br>
 
 ## 📥 Instalação
 
