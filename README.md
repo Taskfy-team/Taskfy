@@ -1,4 +1,4 @@
-# Taskfy ![Logo](https://avatars.githubusercontent.com/u/212968952?s=200&v=4)
+# Taskfy <img src="https://avatars.githubusercontent.com/u/212968952?s=200&v=4" width="30"/>
 
 Taskfy é uma aplicação web para gerenciamento de tarefas desenvolvida com Node.js, Express e MySQL.
 
