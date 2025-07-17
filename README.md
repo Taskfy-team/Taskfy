@@ -40,6 +40,6 @@ npm start
 
 Acesse no navegador: [http://localhost:3000](http://localhost:3000)
 
----
+<br>
 
 📚 Projeto desenvolvido por [Taskfy Team](https://github.com/Taskfy-team)
