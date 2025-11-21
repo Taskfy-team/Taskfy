@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/minilogo.png" type="image/png">
+  <title>Taskfy - Editar Perfil</title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/perfilpage.css">
+</head>
+
+<body>
+<div class="group-container">
+  <div class="main-card">
+    <p class="main-title">Personalização de Perfil</p>
+    
+    <form class="perfCards" action="/perfil/atualizar" method="post">
+        <div class="perf-name">
+            <p class="perf-full-name" id="nomeDisplay"><%= dadosusr.nome_usuario %></p>
+            <div class="perf-alt">
+                <button type="button" id="btnEditarNome" style="background:none;border:none;cursor:pointer;">
+                    <img class="img-edit" src="/images/edit.png" alt="">
+                    <span id="txtnome">Mudar Nome</span>
+                </button>
+                <input type="text" id="novoNome" name="nome" style="display: none;" value="<%= dadosusr.nome_usuario %>">
+            </div>
+        </div>
+        <div class="perf-name">
+            <p class="perf-full-name" id="senhaDisplay">*******</p>
+            <div class="perf-alt">
+                <button type="button" id="btnEditarSenha" style="background:none;border:none;cursor:pointer;">
+                    <img class="img-edit" src="/images/edit.png" alt="">
+                    <span id="txtsenha">Mudar Senha</span>
+                </button>
+                <input type="text" id="novasenha" name="senha" style="display: none;" value="<%= dadosusr.senha_usuario %>">
+            </div>
+        </div>
+
+        <button type="submit" class="perf-exit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+
+</body>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script>
+    initMenu("perfil");
+    let nome = 1;
+    let senha = 1;
+
+    document.getElementById('btnEditarNome').addEventListener('click', function () {
+      if(nome === 1){
+        document.getElementById('novoNome').style.display = 'inline-block';
+        document.getElementById('nomeDisplay').style.display = 'none';
+        document.getElementById('txtnome').textContent = "Esconder Nome";
+        nome = 2;
+      }else{
+        document.getElementById('novoNome').style.display = 'none';
+        document.getElementById('nomeDisplay').style.display = 'inline-block';
+        document.getElementById('txtnome').textContent = "Mudar Nome";
+        nome = 1;
+      }
+      
+    });
+
+    document.getElementById('btnEditarSenha').addEventListener('click', function () {
+      if(senha === 1){
+        document.getElementById('novasenha').style.display = 'inline-block';
+        document.getElementById('senhaDisplay').style.display = 'none';
+        document.getElementById('txtsenha').textContent = "Esconder Senha";
+        senha = 2;
+      }else{
+        document.getElementById('novasenha').style.display = 'none';
+        document.getElementById('senhaDisplay').style.display = 'inline-block';
+        document.getElementById('txtsenha').textContent = "Mudar Senha";
+        senha = 1;
+      }
+      
+    });
+</script>
+</html>

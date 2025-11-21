@@ -1,3 +1,21 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Erro</title>
+</head>
+<body>
+  <h1><%= message %></h1>
+
+  <% if (typeof error !== 'undefined') { %>
+    <% if (error.status) { %>
+      <h2>Status: <%= error.status %></h2>
+    <% } %>
+    <% if (error.stack) { %>
+      <pre><%= error.stack %></pre>
+    <% } %>
+  <% } else { %>
+    <p>Erro desconhecido.</p>
+  <% } %>
+</body>
+</html>

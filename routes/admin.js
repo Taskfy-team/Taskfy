@@ -28,6 +28,7 @@ router.get('/logout', function (req, res) {
   res.redirect('/admin/login');
 });
 
+<<<<<<< HEAD
 router.get('/usuarios', async function(req,res) {
   if(!global.adminlogado){
     return res.redirect('/admin/login');
@@ -35,5 +36,163 @@ router.get('/usuarios', async function(req,res) {
   const usuarios = await global.banco.buscarTodosUsuarios();
   res.render('admUsersPage', { titulo: 'Administração de Usuários', usuarios });
 })
+=======
+router.get('/usuarios', async function(req, res) {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+  const usuarios = await global.banco.buscarTodosUsuarios();
+  const grupos = await global.banco.buscarTodosGrupos();
+  res.render('admUsersPage', { titulo: 'Administração de Usuários', usuarios, grupos });
+});
+
+
+
+//Rota para fazer a busca de usuários naquela tabela de gerenciamento, vou tentar adicionar alguns filtros mais tarde.
+router.post('/buscar-usuarios', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  const { grupo, nome, data } = req.body;
+
+  try {
+    const usuarios = await global.banco.buscarUsuariosFiltrados(grupo, nome, data);
+    const grupos = await global.banco.buscarTodosGrupos(); // necessário para repopular o select
+    res.render('admUsersPage', {
+      titulo: 'Administração de Usuários',
+      usuarios,
+      grupos,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar usuários filtrados:', error);
+    res.render('error', { mensagem: 'Erro ao buscar usuários filtrados.' });
+  }
+});
+
+router.post('/usuarios/deletar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  const ids = req.body.ids;
+
+  if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+    console.error("IDs indefinidos ou ausentes");
+    return res.render('error', { message: 'Nenhum usuário selecionado para exclusão.' });
+  }
+
+  const idArray = Array.isArray(ids) ? ids : [ids];
+
+  try {
+    console.log("Excluindo IDs:", idArray);
+    await global.banco.excluirUsuariosPorIds(idArray);
+    res.redirect('/admin/usuarios');
+  } catch (error) {
+    console.error("Erro ao excluir usuários via procedure:", error);
+    res.render('error', { message: 'Erro ao excluir usuários.' });
+  }
+});
+
+
+// GET - Listar todas as tarefas
+router.get('/tarefas', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  try {
+    const tarefas = await global.banco.buscarTodasTarefas();
+    res.render('admTarefasPage', { titulo: 'Administração de Tarefas', tarefas });
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    res.render('error', { mensagem: 'Erro ao carregar tarefas.' });
+  }
+});
+
+// POST - Buscar tarefas com filtros (nome e data)
+router.post('/tarefas/buscar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+
+  const { nome, data } = req.body;
+  const conexao = await global.banco.conectarBD();
+
+  try {
+    let sql = `SELECT * FROM vw_tarefas_por_grupo WHERE 1=1`;
+    const params = [];
+
+    if (nome && nome.trim() !== '') {
+      sql += ` AND nome_tarefa LIKE ?`;
+      params.push(`%${nome}%`);
+    }
+
+    if (data && data.trim() !== '') {
+      sql += ` AND DATE(dataCriacao) = ?`;
+      params.push(data);
+    }
+
+    sql += ` ORDER BY dataCriacao DESC`;
+
+    const [tarefas] = await conexao.query(sql, params);
+
+    res.render('admTarefasPage', { titulo: 'Administração de Tarefas', tarefas });
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    res.render('error', { mensagem: 'Erro ao buscar tarefas.' });
+  }
+});
+
+router.get('/dashboards', async (req, res) => {
+    if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+  try {
+    const resultado = await banco.obterQtdMembrosPorEquipe();
+    res.render('admDashboardsPage', {
+      tipo: 'dashboards',
+      dadosGrafico: resultado
+    });
+  } catch (err) {
+    console.error('Erro ao carregar dados do dashboard:', err);
+    res.status(500).send('Erro ao carregar dashboard');
+  }
+});
+
+router.post('/usuarios/editar', async (req, res) => {
+  if (!global.adminlogado) return res.status(403).send('Não autorizado');
+
+  const { id, nome, senha, status } = req.body;
+
+  if (!id) return res.status(400).send('ID do usuário é obrigatório');
+
+  try {
+    const conexao = await global.banco.conectarBD();
+    await global.banco.atualizarUsuario(conexao, id, nome, senha, status);
+    res.sendStatus(200);
+  } catch (erro) {
+    console.error('Erro ao editar usuário:', erro);
+    res.sendStatus(500);
+  }
+});
+
+router.post('/usuarios/criar', async (req, res) => {
+  if (!global.adminlogado) {
+    return res.redirect('/admin/login');
+  }
+  const { nome, email, senha, admin } = req.body;
+  const tipo = admin === '1' ? 'admin' : 'usuario';
+
+  try {
+    await banco.inserirNovoUsuarioOuAdmin(nome, email, senha, tipo);
+    res.status(200).json({ sucesso: true });
+  } catch (erro) {
+    console.error('Erro ao inserir usuário/admin:', erro);
+    res.status(500).json({ erro: 'Erro ao inserir usuário/admin' });
+  }
+});
+
+>>>>>>> origin/main
 
 module.exports = router;

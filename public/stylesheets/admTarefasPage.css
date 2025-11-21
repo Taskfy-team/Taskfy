@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f5f9ff;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px 30px;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Filtros */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filtros label {
+    font-weight: 600;
+}
+
+.filtros input,
+.filtros select,
+.filtros button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.filtros button {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    transform: scale(1);
+    border: none;
+}
+
+.filtros .buscar {
+    background-color: #2196f3;
+    color: white;
+}
+
+.filtros .exportar {
+    background-color: #e0e0e0;
+    color: black;
+}
+
+.filtros button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.filtros button:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+/* Tabela de Tarefas */
+.tabela-tarefas {
+    flex-grow: 1;
+    overflow-y: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+.tabela-tarefas table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.tabela-tarefas th,
+.tabela-tarefas td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.tabela-tarefas th {
+    background-color: #2196f3;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.tabela-tarefas tbody tr:hover {
+    background-color: #f1f9ff;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+    .filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtros input,
+    .filtros select,
+    .filtros button {
+        width: 100%;
+    }
+    .tabela-tarefas table {
+        min-width: 0;
+        font-size: 12px;
+    }
+}

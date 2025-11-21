@@ -2,6 +2,7 @@
 
 * {
     font-family: "Poppins", sans-serif;
+<<<<<<< HEAD
 }
 
 main {
@@ -40,11 +41,50 @@ h1 {
   gap: 10px;
   align-items: center;
   margin-bottom: 20px;
+=======
+    box-sizing: border-box; /* ajuda no controle das larguras */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    height: 100vh; /* força ocupar a tela toda */
+    overflow: hidden; /* evitar scroll no body */
+    background-color: #f5f9ff;
+}
+
+main {
+    flex-grow: 1; /* ocupar todo espaço restante */
+    padding: 20px 30px;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filtros label {
+    font-weight: 600;
+>>>>>>> origin/main
 }
 
 .filtros input,
 .filtros select,
 .filtros button {
+<<<<<<< HEAD
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -55,10 +95,29 @@ h1 {
   background-color: #2196f3;
   color: white;
   border: none;
+=======
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.filtros button {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    transform: scale(1);
+    border: none;
+}
+
+.filtros .buscar {
+    background-color: #2196f3;
+    color: white;
+>>>>>>> origin/main
 }
 
 .filtros .exportar,
 .filtros .criar {
+<<<<<<< HEAD
   background-color: #f0f0f0;
   border: none;
 }
@@ -136,4 +195,202 @@ h1 {
 .filtros button:active {
   transform: scale(0.95);
   filter: brightness(0.9);
+=======
+    background-color: #e0e0e0;
+    color: black;
+}
+
+.filtros .deletar {
+    background-color: #f44336;
+    color: white;
+}
+
+.filtros button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.filtros button:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+/* Tabela e scroll */
+
+.tabela-usuarios {
+    flex-grow: 1; /* para ocupar espaço vertical disponível */
+    overflow-y: auto; /* ativa scroll vertical quando necessário */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+.tabela-usuarios table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px; /* ajuda na responsividade horizontal */
+}
+
+.tabela-usuarios th,
+.tabela-usuarios td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap; /* evita quebra de texto dentro das células */
+}
+
+.tabela-usuarios th {
+    background-color: #2196f3;
+    color: white;
+    position: sticky;
+    top: 0; /* para header fixo ao rolar */
+    z-index: 1;
+}
+
+/* Se quiser um efeito para linhas ao passar mouse */
+.tabela-usuarios tbody tr:hover {
+    background-color: #f1f9ff;
+}
+
+/* Botão criar, exportar, deletar alinhados melhor */
+
+.filtros button.exportar,
+.filtros button.deletar,
+.filtros button.criar {
+    min-width: 90px;
+}
+
+/* Pequeno ajuste na responsividade */
+
+@media screen and (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+    .filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtros input,
+    .filtros select,
+    .filtros button {
+        width: 100%;
+    }
+    .tabela-usuarios table {
+        min-width: 0;
+        font-size: 12px;
+    }
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alterei para 'flex-start' para ancorar o pop-up no topo */
+  z-index: 1000; /* Garantir que o pop-up esteja acima de outros elementos */
+  padding-top: 20px; /* Espaço extra no topo para não encostar na borda */
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  max-height: 80vh; /* Limita a altura do pop-up */
+  overflow-y: auto; /* Adiciona barra de rolagem caso o conteúdo ultrapasse a altura */
+}
+
+.popup-content input,
+.popup-content select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.popup-buttons button {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Botão Cancelar */
+.popup-buttons button:first-child {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.popup-buttons button:first-child:hover {
+  background-color: #e0e0e0;
+  border-color: #999;
+}
+
+/* Botão Confirmar */
+.popup-buttons button:last-child {
+  background-color: #3C91FF;
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-buttons button:last-child:hover {
+  background-color: #317de0;
+}
+
+.popup-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.popup-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.popup-card input,
+.popup-card select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+>>>>>>> origin/main
 }

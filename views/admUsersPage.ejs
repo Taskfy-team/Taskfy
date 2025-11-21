@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
@@ -40,12 +41,37 @@
         <option value="">Selecionar</option>
         <option value="grupo1">Grupo 1</option>
         <option value="grupo2">Grupo 2</option>
+=======
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrar Usuários</title>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="/stylesheets/admUsersPage.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Administrar Usuários</h1>
+
+    <!-- Filtros -->
+    <form class="filtros" method="POST" action="/admin/buscar-usuarios">
+      <label for="grupo">Grupo:</label>
+      <select id="grupo" name="grupo">
+        <option value="">Selecionar</option>
+        <% grupos.forEach(grupo=> { %>
+          <option value="<%= grupo.nome_equipe %>">
+            <%= grupo.nome_equipe %>
+          </option>
+          <% }); %>
+>>>>>>> origin/main
       </select>
 
       <label for="nome">Nome:</label>
       <input type="text" id="nome" name="nome" placeholder="Procurar por nome...">
 
       <label for="data">Data:</label>
+<<<<<<< HEAD
 
       <input type="date" id="data" name="data">
       <button type="submit" class="buscar">Buscar</button>
@@ -103,5 +129,265 @@
 </body>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+=======
+      <input type="date" id="data" name="data">
+
+      <button type="submit" class="buscar">Buscar</button>
+      <button type="button" class="exportar">Exportar <ion-icon name="download-outline"
+          size="medium"></ion-icon></button>
+      <button type="button" class="deletar">Deletar <ion-icon name="trash-outline"></ion-icon></button>
+      <button type="button" class="criar" onclick="abrirCriacao()">Criar +</button>
+
+
+    </form>
+
+    <!-- Tabela e Formulário de Deleção -->
+    <form id="form-deletar" method="POST" action="/admin/usuarios/deletar">
+      <section class="tabela-usuarios">
+        <table>
+          <thead>
+            <tr>
+              <th>Selecionar</th>
+              <th>Data de Criação</th>
+              <th>Nome do usuário</th>
+              <th>Data Nascimento</th>
+              <th>Telefone</th>
+              <th>Status</th>
+              <th>Admin</th>
+              <th>Email</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% usuarios.forEach(usuario=> { %>
+              <tr>
+                <td><input type="checkbox" name="ids" value="<%= usuario.id_usuario %>" /></td>
+                <td>
+                  <%= new Date(usuario.dataCriacao).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= usuario.nome_usuario %>
+                </td>
+                <td>
+                  <%= new Date(usuario.dataNascimento).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= usuario.numeroTelefone %>
+                </td>
+                <td>
+                  <%= usuario.status %>
+                </td>
+                <td>
+                  <%= usuario.admin ? 'Sim' : 'Não' %>
+                </td>
+                <td>
+                  <%= usuario.email_usuario %>
+                </td>
+                <td>
+                  <button type="button" onclick='openEditPopup(<%- JSON.stringify(usuario) %>)'>
+                    <ion-icon name="color-wand-outline" style="font-size: 1.3rem;"></ion-icon>
+                  </button>
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+      </section>
+    </form>
+    <div id="editPopup" class="popup-overlay" style="display: none;">
+      <div class="popup-content">
+        <h3>Editar Usuário</h3>
+        <form id="editForm">
+          <input type="hidden" id="edit-id">
+
+          <label for="edit-nome">Nome:</label>
+          <input type="text" id="edit-nome" disabled>
+          <button type="button" onclick="enableEdit('edit-nome')">Editar Nome</button>
+
+          <label for="edit-senha">Senha:</label>
+          <input type="password" id="edit-senha" disabled>
+          <button type="button" onclick="enableEdit('edit-senha')">Editar Senha</button>
+
+          <label for="edit-status">Status:</label>
+          <select id="edit-status">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+
+          <div class="popup-buttons">
+            <button onclick="fecharPopup()">
+              <ion-icon name="close-circle-outline"></ion-icon> Cancelar
+            </button>
+            <button onclick="confirmarEdicao()">
+              <ion-icon name="checkmark-circle-outline"></ion-icon> Confirmar
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div id="popup-criar" class="popup-overlay" style="display: none;">
+      <div class="popup-card">
+        <h3>Criar Novo Usuário</h3>
+        <form id="form-criar" onsubmit="enviarCriacao(event)">
+          <input type="text" name="nome" placeholder="Nome" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="senha" placeholder="Senha" required>
+
+          <select name="admin">
+            <option value="0">Usuário Comum</option>
+            <option value="1">Administrador</option>
+          </select>
+
+          <div class="popup-buttons">
+            <button type="button" onclick="fecharCriacao()">
+              <ion-icon name="close-circle-outline"></ion-icon> Cancelar
+            </button>
+            <button type="submit">
+              <ion-icon name="add-circle-outline"></ion-icon> Criar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Ícones -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    // Passe o tipo conforme a página, exemplo para admin usuários:
+    initMenu('usuarios'); // para admin usuários
+    // Ou initMenu('gruposAdmin') para admin grupos
+    // Ou initMenu('tarefasAdmin') para admin tarefas
+    // Ou initMenu('grupos') para usuário comum grupos, etc.
+  </script>
+  <script>
+    document.querySelector('.deletar').addEventListener('click', function () {
+      const checkboxes = document.querySelectorAll('#form-deletar input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+        alert('Selecione ao menos um usuário para excluir.');
+        return;
+      }
+
+      if (confirm('Tem certeza que deseja excluir os usuários selecionados?')) {
+        const ids = Array.from(checkboxes).map(cb => cb.value);
+
+        // Envia no formato correto
+        const formData = new URLSearchParams();
+        ids.forEach(id => formData.append('ids', id)); // <- sem colchetes aqui
+
+        fetch('/admin/usuarios/deletar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
+        }).then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            return response.text().then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            });
+          }
+        }).catch(error => {
+          alert('Erro ao excluir usuários: ' + error);
+        });
+      }
+    });
+  </script>
+  <script>
+    function enableEdit(id) {
+      document.getElementById(id).disabled = false;
+      document.getElementById(id).focus();
+    }
+
+    function openEditPopup(user) {
+      document.getElementById('edit-id').value = user.id_usuario;
+      document.getElementById('edit-nome').value = user.nome_usuario;
+      document.getElementById('edit-nome').disabled = true;
+      document.getElementById('edit-senha').value = '';
+      document.getElementById('edit-senha').disabled = true;
+      document.getElementById('edit-status').value = user.status;
+      document.getElementById('editPopup').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('editPopup').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('edit-id').value;
+      const nomeInput = document.getElementById('edit-nome');
+      const senhaInput = document.getElementById('edit-senha');
+      const status = document.getElementById('edit-status').value;
+
+      const dados = { id };
+
+      if (!nomeInput.disabled) dados.nome = nomeInput.value;
+      if (!senhaInput.disabled && senhaInput.value) dados.senha = senhaInput.value;
+      if (status) dados.status = status;
+
+      try {
+        const resposta = await fetch('/admin/usuarios/editar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        if (resposta.ok) {
+          location.reload();
+        } else {
+          alert('Erro ao atualizar usuário');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro na requisição');
+      }
+    });
+  </script>
+
+ <script>
+  function abrirCriacao() {
+    document.getElementById('popup-criar').style.display = 'flex';
+  }
+
+  function fecharCriacao() {
+    document.getElementById('popup-criar').style.display = 'none';
+    document.getElementById('form-criar').reset();
+  }
+
+  async function enviarCriacao(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('form-criar');
+    const formData = new FormData(form);
+    const dados = {
+      nome: formData.get('nome'),
+      email: formData.get('email'),
+      senha: formData.get('senha'),
+      admin: formData.get('admin')
+    };
+
+    const res = await fetch('/admin/usuarios/criar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+
+    if (res.ok) {
+      fecharCriacao();
+      location.reload();
+    } else {
+      alert('Erro ao criar usuário.');
+    }
+  }
+</script>
+</body>
+>>>>>>> origin/main
 
 </html>
