@@ -4,7 +4,6 @@ Taskfy é uma aplicação web para gerenciamento de tarefas desenvolvida com Nod
 
 <br>
 
-
 ## 🚀 Pré-requisitos
 
 - [Node.js](https://nodejs.org/) instalado
@@ -22,9 +21,8 @@ git clone https://github.com/Taskfy-team/Taskfy
 
 ### 2. Configure o banco de dados
 
-1. Acesse seu gerenciador MySQL (ex: phpMyAdmin)
-2. Crie um banco de dados chamado **`taskfy`**
-3. Importe o arquivo `taskfy.sql` que está na raiz do projeto
+1. Importe o arquivo `taskfy.sql` para seu banco
+2. Use o modelo .env.example e coloque as credenciais do banco mySQL
 
 ### 3. Instale as dependências
 
